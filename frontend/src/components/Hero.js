@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { PRODUCTS, DEFAULT_INDEX, SPECS } from "@/data/products";
-import LogoMark from "@/components/LogoMark";
+import { PRODUCTS, DEFAULT_INDEX, SPECS, priceLabel } from "@/data/products";
 import SneakerStage from "@/components/SneakerStage";
 import ColorSelectors from "@/components/ColorSelectors";
-import Marquee from "@/components/Marquee";
 
 const EASE = [0.16, 1, 0.3, 1];
 
@@ -45,8 +43,6 @@ function Bracket({ className }) {
   );
 }
 
-const NAV_LINKS = ["ARCHIVE", "TECHNOLOGY", "COLORWAYS", "SPECS"];
-
 export default function Hero() {
   const [active] = useState(DEFAULT_INDEX);
   const p = PRODUCTS[active];
@@ -67,172 +63,145 @@ export default function Hero() {
   };
 
   return (
-    <div className="relative w-full min-h-screen bg-[#05070A] text-white overflow-x-hidden">
-      <main
-        className="relative flex flex-col min-h-[100svh] overflow-hidden"
-        data-testid="tuned-air-hero-section"
-        onMouseMove={onMouseMove}
+    <section
+      className="relative flex flex-col min-h-[100svh] overflow-hidden"
+      data-testid="tuned-air-hero-section"
+      onMouseMove={onMouseMove}
+    >
+      {/* giant background typography */}
+      <motion.div
+        aria-hidden="true"
+        className="absolute inset-0 z-0 flex items-center justify-center select-none pointer-events-none"
+        style={{ x: bgX, y: bgY }}
       >
-        {/* giant background typography */}
-        <motion.div
-          aria-hidden="true"
-          className="absolute inset-0 z-0 flex items-center justify-center select-none pointer-events-none"
-          style={{ x: bgX, y: bgY }}
+        <motion.span
+          className="font-display font-extrabold uppercase text-outline text-[44vw] lg:text-[34vw] leading-none"
+          initial={{ opacity: 0, scale: 1.06 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 2, delay: 0.2, ease: EASE }}
         >
-          <motion.span
-            className="font-display font-extrabold uppercase text-outline text-[44vw] lg:text-[34vw] leading-none"
-            initial={{ opacity: 0, scale: 1.06 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 2, delay: 0.2, ease: EASE }}
-          >
-            TN
-          </motion.span>
-        </motion.div>
+          TN
+        </motion.span>
+      </motion.div>
 
-        {/* nav */}
-        <header className="absolute top-0 inset-x-0 z-40 flex items-center justify-between px-6 sm:px-10 h-20">
-          <a href="#" className="flex items-center gap-3" data-testid="brand-logo">
-            <LogoMark className="w-8 h-8" />
-            <span className="font-tech text-xs tracking-[0.4em] text-white">
-              TUNED&nbsp;AIR
+      {/* HUD corner brackets framing the product viewport */}
+      <Bracket className="top-24 left-5 sm:left-9 border-t border-l" />
+      <Bracket className="top-24 right-5 sm:right-9 border-t border-r" />
+      <Bracket className="bottom-24 left-5 sm:left-9 border-b border-l" />
+      <Bracket className="bottom-24 right-5 sm:right-9 border-b border-r" />
+
+      {/* headline */}
+      <div className="absolute top-[13vh] inset-x-0 z-30 text-center px-6">
+        <Reveal delay={0.15}>
+          <p className="font-tech text-[10px] sm:text-[11px] tracking-[0.45em] text-cyan-300">
+            NIKE — TUNED AIR ARCHIVAL EDITION
+          </p>
+        </Reveal>
+        <Reveal delay={0.28}>
+          <h1
+            className="font-display font-extrabold uppercase leading-none mt-4 text-3xl sm:text-5xl lg:text-6xl tracking-tight"
+            data-testid="product-title"
+          >
+            AIR&nbsp;MAX&nbsp;PLUS{" "}
+            <span className="text-cyan-300 drop-shadow-[0_0_18px_rgba(0,240,255,0.6)]">
+              TN
             </span>
-          </a>
-          <nav className="hidden md:flex items-center gap-10">
-            {NAV_LINKS.map((l) => (
-              <a
-                key={l}
-                href="#"
-                className="font-tech text-[11px] tracking-[0.3em] text-white/50 hover:text-cyan-300 transition-colors duration-300"
-              >
-                {l}
-              </a>
-            ))}
-          </nav>
-          <a
-            href="#"
-            data-testid="reserve-air-button"
-            className="font-tech text-[11px] tracking-[0.25em] text-cyan-300 border border-cyan-400/40 rounded-full px-5 py-2.5 hover:bg-cyan-400/10 hover:shadow-[0_0_24px_rgba(0,240,255,0.25)] transition-all duration-300"
-          >
-            RESERVE AIR
-          </a>
-        </header>
+          </h1>
+        </Reveal>
+      </div>
 
-        {/* HUD corner brackets framing the product viewport */}
-        <Bracket className="top-24 left-5 sm:left-9 border-t border-l" />
-        <Bracket className="top-24 right-5 sm:right-9 border-t border-r" />
-        <Bracket className="bottom-24 left-5 sm:left-9 border-b border-l" />
-        <Bracket className="bottom-24 right-5 sm:right-9 border-b border-r" />
+      {/* sneaker */}
+      <SneakerStage
+        products={PRODUCTS}
+        active={active}
+        shoeX={shoeX}
+        shoeY={shoeY}
+      />
 
-        {/* headline */}
-        <div className="absolute top-[13vh] inset-x-0 z-30 text-center px-6">
-          <Reveal delay={0.15}>
-            <p className="font-tech text-[10px] sm:text-[11px] tracking-[0.45em] text-cyan-300">
-              NIKE — TUNED AIR ARCHIVAL EDITION
-            </p>
-          </Reveal>
-          <Reveal delay={0.28}>
-            <h1
-              className="font-display font-extrabold uppercase leading-none mt-4 text-3xl sm:text-5xl lg:text-6xl tracking-tight"
-              data-testid="product-title"
-            >
-              AIR&nbsp;MAX&nbsp;PLUS{" "}
-              <span className="text-cyan-300 drop-shadow-[0_0_18px_rgba(0,240,255,0.6)]">
-                TN
-              </span>
-            </h1>
-          </Reveal>
-        </div>
-
-        {/* sneaker */}
-        <SneakerStage products={PRODUCTS} active={active} shoeX={shoeX} shoeY={shoeY} />
-
-        {/* left — colorway info */}
-        <FadeUp
-          delay={0.7}
-          className="absolute z-30 left-6 sm:left-10 top-[56%] sm:top-[63%] -translate-y-1/2 max-w-[210px] sm:max-w-[240px]"
+      {/* left — colorway info */}
+      <FadeUp
+        delay={0.7}
+        className="absolute z-30 left-6 sm:left-10 top-[56%] sm:top-[63%] -translate-y-1/2 max-w-[210px] sm:max-w-[240px]"
+      >
+        <p className="font-tech text-[10px] tracking-[0.4em] text-white/40">
+          TN-98&nbsp;//&nbsp;{p.index}&nbsp;/&nbsp;04
+        </p>
+        <h2
+          className="font-display text-base sm:text-xl font-bold mt-3 text-white leading-snug"
+          data-testid="product-colorway"
         >
-          <p className="font-tech text-[10px] tracking-[0.4em] text-white/40">
-            TN-98&nbsp;//&nbsp;{p.index}&nbsp;/&nbsp;04
-          </p>
-          <h2
-            className="font-display text-base sm:text-xl font-bold mt-3 text-white leading-snug"
-            data-testid="product-colorway"
-          >
-            {p.name}
-          </h2>
-          <p className="font-tech text-[10px] sm:text-[11px] leading-relaxed text-white/45 mt-3 hidden sm:block">
-            {p.desc}
-          </p>
-        </FadeUp>
+          {p.name}
+        </h2>
+        <p className="font-tech text-[10px] sm:text-[11px] leading-relaxed text-white/45 mt-3 hidden sm:block">
+          The archival waveform, retuned for the night.
+        </p>
+      </FadeUp>
 
-        {/* right — engineered specs */}
-        <FadeUp
-          delay={0.85}
-          className="absolute z-30 right-6 sm:right-10 top-[63%] -translate-y-1/2 hidden md:block"
-        >
-          <p className="font-tech text-[10px] tracking-[0.4em] text-white/40 mb-3">
-            ENGINEERED&nbsp;SPEC
-          </p>
-          {SPECS.map((s, i) => (
-            <div
-              key={i}
-              data-testid={`spec-item-${i}`}
-              className="flex items-center gap-4 py-3 border-b border-white/10 w-60"
-            >
-              <span className="font-tech text-[10px] text-cyan-300">
-                0{i + 1}
-              </span>
-              <span className="font-tech text-[11px] tracking-[0.15em] text-white/70">
-                {s}
-              </span>
-            </div>
-          ))}
-        </FadeUp>
-
-        {/* bottom-left — price + status */}
-        <FadeUp
-          delay={1}
-          className="absolute z-30 left-6 sm:left-10 bottom-28 sm:bottom-9"
-        >
-          <p className="font-tech text-[10px] tracking-[0.4em] text-white/40">
-            DROP&nbsp;001
-          </p>
-          <p
-            className="font-display font-bold text-2xl sm:text-3xl mt-2"
-            data-testid="product-price"
+      {/* right — engineered specs */}
+      <FadeUp
+        delay={0.85}
+        className="absolute z-30 right-6 sm:right-10 top-[63%] -translate-y-1/2 hidden md:block"
+      >
+        <p className="font-tech text-[10px] tracking-[0.4em] text-white/40 mb-3">
+          ENGINEERED&nbsp;SPEC
+        </p>
+        {SPECS.map((s, i) => (
+          <div
+            key={i}
+            data-testid={`spec-item-${i}`}
+            className="flex items-center gap-4 py-3 border-b border-white/10 w-60"
           >
-            {p.price}
-          </p>
-          <p
-            className="flex items-center gap-2 font-tech text-[10px] tracking-[0.3em] text-cyan-300/90 mt-3"
-            data-testid="hud-status-badge"
-          >
-            <span className="relative flex w-2 h-2">
-              <span className="absolute inline-flex w-full h-full rounded-full bg-cyan-400 opacity-60 animate-ping" />
-              <span className="relative inline-flex w-2 h-2 rounded-full bg-cyan-300" />
+            <span className="font-tech text-[10px] text-cyan-300">
+              0{i + 1}
             </span>
-            IN&nbsp;STOCK
-          </p>
-        </FadeUp>
+            <span className="font-tech text-[11px] tracking-[0.15em] text-white/70">
+              {s}
+            </span>
+          </div>
+        ))}
+      </FadeUp>
 
-        {/* bottom-right — coordinates / scroll cue */}
-        <FadeUp
-          delay={1.1}
-          className="absolute z-30 right-6 sm:right-10 bottom-7 sm:bottom-9 hidden sm:block text-right"
+      {/* bottom-left — price + status */}
+      <FadeUp
+        delay={1}
+        className="absolute z-30 left-6 sm:left-10 bottom-28 sm:bottom-9"
+      >
+        <p className="font-tech text-[10px] tracking-[0.4em] text-white/40">
+          DROP&nbsp;001
+        </p>
+        <p
+          className="font-display font-bold text-xl sm:text-3xl mt-2 text-white"
+          data-testid="product-price"
         >
-          <p className="font-tech text-[10px] tracking-[0.3em] text-white/35">
-            45.5152°&nbsp;N&nbsp;/&nbsp;122.6784°&nbsp;W
-          </p>
-          <p className="font-tech text-[10px] tracking-[0.4em] text-cyan-300/80 mt-3">
-            SCROLL&nbsp;↓
-          </p>
-        </FadeUp>
+          {priceLabel(p)}
+        </p>
+        <p
+          className="flex items-center gap-2 font-tech text-[10px] tracking-[0.3em] text-cyan-300/90 mt-3"
+          data-testid="hud-status-badge"
+        >
+          <span className="relative flex w-2 h-2">
+            <span className="absolute inline-flex w-full h-full rounded-full bg-cyan-400 opacity-60 animate-ping" />
+            <span className="relative inline-flex w-2 h-2 rounded-full bg-cyan-300" />
+          </span>
+          IN&nbsp;STOCK
+        </p>
+      </FadeUp>
 
-        {/* color selectors */}
-        <ColorSelectors products={PRODUCTS} active={active} />
-      </main>
+      {/* bottom-right — coordinates / scroll cue */}
+      <FadeUp
+        delay={1.1}
+        className="absolute z-30 right-6 sm:right-10 bottom-7 sm:bottom-9 hidden sm:block text-right"
+      >
+        <p className="font-tech text-[10px] tracking-[0.3em] text-white/35">
+          45.5152°&nbsp;N&nbsp;/&nbsp;122.6784°&nbsp;W
+        </p>
+        <p className="font-tech text-[10px] tracking-[0.4em] text-cyan-300/80 mt-3">
+          SCROLL&nbsp;↓
+        </p>
+      </FadeUp>
 
-      <Marquee />
-    </div>
+      {/* colorway selectors — link to each product page */}
+      <ColorSelectors products={PRODUCTS} active={active} />
+    </section>
   );
 }

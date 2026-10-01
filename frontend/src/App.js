@@ -1,12 +1,47 @@
-import { useEffect } from "react";
+import { useEffect, Component } from "react";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Lenis from "lenis";
-import "@/App.css";
-import "@/index.css";
-import Hero from "@/components/Hero";
+import { Toaster } from "sonner";
+import { CartProvider } from "@/context/CartContext";
+import Nav from "@/components/Nav";
+import Footer from "@/components/Footer";
+import CartDrawer from "@/components/CartDrawer";
+import Home from "@/pages/Home";
+import Shop from "@/pages/Shop";
+import Product from "@/pages/Product";
+
+class ErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { error: null };
+  }
+  static getDerivedStateFromError(error) {
+    return { error };
+  }
+  render() {
+    if (this.state.error)
+      return (
+        <div className="min-h-screen bg-[#05070A] text-white flex items-center justify-center font-tech text-xs tracking-[0.3em]">
+          SOMETHING UNTUNED — PLEASE RELOAD
+        </div>
+      );
+    return this.props.children;
+  }
+}
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    if (window.__lenis) window.__lenis.scrollTo(0, { immediate: true });
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+}
 
 function App() {
   useEffect(() => {
     const lenis = new Lenis({ duration: 1.2, smoothWheel: true });
+    window.__lenis = lenis;
     let raf;
     const loop = (t) => {
       lenis.raf(t);
@@ -16,10 +51,42 @@ function App() {
     return () => {
       cancelAnimationFrame(raf);
       lenis.destroy();
+      window.__lenis = null;
     };
   }, []);
 
-  return <Hero />;
+  return (
+    <CartProvider>
+      <BrowserRouter>
+        <ErrorBoundary>
+          <ScrollToTop />
+          <Nav />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/shop" element={<Shop />} />
+            <Route path="/product/:id" element={<Product />} />
+            <Route path="*" element={<Home />} />
+          </Routes>
+          <Footer />
+          <CartDrawer />
+        </ErrorBoundary>
+      </BrowserRouter>
+      <Toaster
+        position="bottom-right"
+        theme="dark"
+        toastOptions={{
+          style: {
+            background: "#0A0E17",
+            border: "1px solid rgba(0,240,255,0.25)",
+            color: "#fff",
+            fontFamily: "'Space Mono', monospace",
+            fontSize: "11px",
+            letterSpacing: "0.1em",
+          },
+        }}
+      />
+    </CartProvider>
+  );
 }
 
 export default App;

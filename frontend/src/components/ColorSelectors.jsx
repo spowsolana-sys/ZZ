@@ -1,17 +1,19 @@
+import { Link } from "react-router-dom";
+
 export default function ColorSelectors({ products, active }) {
   return (
-    <div className="absolute z-30 inset-x-0 bottom-7 sm:bottom-9 flex flex-col items-center gap-3">
+    <div className="absolute z-30 inset-x-0 bottom-7 sm:bottom-9 flex flex-col items-center gap-3 pointer-events-none">
       <p className="font-tech text-[10px] tracking-[0.45em] text-white/40">
         COLORWAY — 04
       </p>
-      <div className="flex items-center gap-4 sm:gap-5">
+      <div className="flex items-center gap-4 sm:gap-5 pointer-events-auto">
         {products.map((p, i) => (
-          <button
+          <Link
             key={p.id}
-            type="button"
+            to={`/product/${p.id}`}
             aria-label={`Colorway ${p.name}`}
             data-testid={`color-selector-${p.id}`}
-            className={`relative w-9 h-9 sm:w-11 sm:h-11 rounded-full transition-transform duration-300 hover:scale-115 cursor-pointer ${
+            className={`relative w-9 h-9 sm:w-11 sm:h-11 rounded-full transition-transform duration-300 hover:scale-115 ${
               i === active ? "scale-110" : "opacity-80 hover:opacity-100"
             }`}
             style={{
@@ -25,7 +27,7 @@ export default function ColorSelectors({ products, active }) {
             {i === active && (
               <span className="absolute -inset-2 rounded-full border border-cyan-300/40 pointer-events-none" />
             )}
-          </button>
+          </Link>
         ))}
       </div>
     </div>

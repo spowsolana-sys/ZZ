@@ -1,36 +1,35 @@
-# PRD — TUNED AIR (Nike Air Max Plus TN) Hero
+# PRD — TUNED AIR (Nike Air Max Plus TN) Premium Sneaker Store
 
 ## Original Problem Statement
-Create the main hero section of a premium futuristic sneaker website using four uploaded sneaker images (black, white, white/aqua, burgundy/black) as individual product assets — never combined/collaged. Large centered sneaker, premium minimal futuristic design, plenty of empty space, dedicated product viewport with overflow hidden, product info around the sneaker, four circular color selectors, clean premium typography, responsive desktop + mobile. All four sneakers normalized to identical size/position/scale/rotation/alignment. Sneaker appears large, floating, no hard ground contact, soft shadow underneath for hover effect. NO transition animation yet — layout, assets, viewport, typography, selectors and visual design only.
+Build out the hero into a complete premium futuristic sneaker ecommerce store: premium homepage, product catalog/shop page, product cards, clean navigation, immersive product pages, responsive desktop + mobile. The four uploaded sneaker images are four color variants of ONE product. No hardcoded prices — leave as flexible placeholder/editable field for Shopify. No detailed technical descriptions; priority is visual result, layout, navigation and interactive experience. Keep the four uploaded assets and dark futuristic cyan visual style.
 
-## User Choices (asked at start)
-- Theme: Dark futuristic (near-black canvas, glowing accents)
-- Accent: Cyan / electric aqua
-- Color selectors: Static visuals only (no swap logic yet)
+## User Choices
+- Dark futuristic theme, cyan/electric aqua accent (from first build)
+- Color selectors on hero: static visuals (now double as links to product pages)
 - Product copy: "Nike Air Max Plus (TN)"
+- Price: NEVER hardcoded — `price: null` in /app/frontend/src/data/products.js renders "PRICE TBD"; map this field to Shopify price later
 
 ## Architecture
-- Frontend-only React app (CRA + Tailwind + framer-motion + lenis). No backend endpoints needed for this scope.
-- Assets: 4 uploaded PNGs downloaded to /app/frontend/src/assets/ (all exactly 1200x800 RGBA).
-- Normalization strategy: all 4 images stacked in one identical container (same size/position/rotation since photos share the same frame/angle); per-product `scale` compensation only offsets baked-in glow halos (white 0.955, aqua 0.965, black/burgundy 1.0).
-- Components: Hero.js (composition, mouse parallax, masked line reveals), SneakerStage.jsx (spotlight, float loop, counter-phased elliptical shadow), ColorSelectors.jsx (4 static circular swatches), Marquee.jsx (60s slow editorial loop), LogoMark.jsx (original SVG hexagon-wave mark, also used as favicon /logo.svg).
-- Fonts: Unbounded (display) + Space Mono (technical HUD labels).
+- React SPA (CRA + Tailwind + framer-motion + lenis + sonner). React Router routes: `/` home, `/shop` catalog, `/product/:id` immersive product page (unknown id redirects to /shop).
+- Cart: client-side CartContext + slide-over CartDrawer (add from product page with size, remove, count badge, checkout button is visual with "prices set in Shopify — pending" note). No backend needed for this scope.
+- Data: single source /app/frontend/src/data/products.js — 4 variants, shared normalization (identical 1200x800 frames stacked; per-variant scale compensates glow halos), priceLabel() helper, SIZES 40-46.
+- Shared components: Nav (fixed, blur, HOME/SHOP links, Reserve pill, cart button + count), Footer (outline wordmark), ProductCard (used in shop grid + home bento), SneakerStage (spotlight, float loop, counter-phased hover shadow, mouse parallax), ColorSelectors (variant circles linking to product pages), LogoMark (SVG hexagon-wave, favicon too).
+- Fonts: Unbounded (display) + Space Mono (technical).
+
+## Pages
+- Home: hero (headline masked reveal, floating black TN, giant outlined TN, HUD brackets, PRICE TBD + IN STOCK) → marquee → asymmetric bento of the 4 variants (black/burgundy featured wide) → statement section with ENTER THE SHOP CTA → footer.
+- Shop: "THE INDEX" header + 2x2 product card grid (spotlight, hover lift/glow, VIEW arrow, PRICE TBD).
+- Product: immersive full-viewport stage — giant variant index number behind shoe, breadcrumb SHOP / AIR MAX PLUS TN, variant identity, EU size chips (right column desktop / single row mobile), PRICE TBD + IN STOCK, ADD TO CART, variant selector circles, per-variant spotlight tint.
 
 ## Implemented (2026-10-01)
-- Full-viewport dark hero (#05070A) with giant outlined "TN" background typography (parallax, entrance scale reveal)
-- Masked line-by-line headline reveal (AIR MAX PLUS TN in cyan glow)
-- Floating black TN sneaker (default colorway) with cyan spotlight, drop-shadow rim glow, levitation loop + counter-phased soft hovering shadow
-- Product info around the viewport: index code TN-98 // 01/04, colorway name, description, engineered spec list (right), price + IN STOCK status LED (bottom-left), coordinates + scroll cue (bottom-right), HUD corner brackets
-- 4 circular color selectors (static, first active with cyan ring glow)
-- Slow editorial marquee strip (AIR MAX PLUS TN / TUNED AIR / 1998 ARCHIVE…)
-- Lenis smooth scrolling, framer-motion reveals, subtle mouse parallax (shoe vs background counter-motion)
-- Responsive 1440px + 390px verified, no horizontal overflow
-- data-testids on all interactive/critical elements (hero section, product viewport, image, title, colorway, price, selectors, specs, marquee, status badge, reserve button)
+- First build: hero section, assets, normalization, selectors, typography, marquee, lenis, parallax.
+- Store expansion: router + shared nav/footer, home bento + statement, shop catalog, immersive product pages, cart context + drawer + toasts, price placeholder system, responsive fixes (mobile product stack, shop headline wrap), click-through fix on selectors strip.
+- data-testids across nav, cards, sizes, add-to-cart, cart drawer, selectors, titles.
 
-## Placeholders (user gave no values)
-- Prices $180/$185/$190/$195, spec list wording, colorway names (TRIPLE BLACK CYBER / HYPER WHITE GLACIER / AQUA WAVEFORM / BURGUNDY VOLT), coordinates ticker — all placeholder copy.
+## Verified
+- Routes 200; card click → product page; size → add to cart → drawer with item + count; desktop 1440 + mobile 390 screenshots on home/shop/product; no horizontal overflow.
 
 ## Backlog
-- P0: Wire color selectors to swap active colorway with the (deferred) product transition animation
-- P1: Reserve Air CTA → checkout/waitlist flow; nav links → real routes
-- P2: Scroll sections below hero (archive/story/tech), mobile menu overlay
+- P0: Shopify connection (real prices, checkout) — price field already isolated in products.js
+- P1: Persistent cart (localStorage), real checkout handoff
+- P2: Archive/story sections, mobile menu overlay, variant transition animation on product page

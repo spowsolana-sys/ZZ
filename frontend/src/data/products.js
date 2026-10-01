@@ -4,10 +4,14 @@ import aqua from "../assets/sneaker-aqua.png";
 import burgundy from "../assets/sneaker-burgundy.png";
 
 /*
- * All four photos share the identical 1200x800 frame, camera angle and
- * rotation. Rendering them stacked in the same container with identical
- * size/position normalizes them; `scale`/`shiftY` only compensate for the
- * baked-in glow halos (white/aqua) so every colorway reads the same size.
+ * The four photos are color variants of ONE product (Air Max Plus TN).
+ * All share the identical 1200x800 frame, camera angle and rotation, so they
+ * render stacked in the same container; `scale`/`shiftY` only compensate for
+ * baked-in glow halos (white/aqua) so every variant reads the same size.
+ *
+ * PRICE: intentionally NOT set. `price` stays null and renders as a
+ * "PRICE TBD" placeholder — map this field to the Shopify price when
+ * connecting the store. Do not hardcode a price here.
  */
 export const PRODUCTS = [
   {
@@ -17,11 +21,11 @@ export const PRODUCTS = [
     hex: "#0D0D0D",
     swatch: "radial-gradient(circle at 35% 35%, #2E2E2E, #050505)",
     glow: "rgba(0, 240, 255, 0.30)",
+    spotlight: "rgba(0, 240, 255, 0.16)",
     image: black,
     scale: 1.0,
     shiftY: "0%",
-    price: "$180",
-    desc: "Stealth matte finish with an integrated TPU exoskeleton and hyper-cyan shock-absorbing air cells.",
+    price: null,
   },
   {
     id: "white",
@@ -30,11 +34,11 @@ export const PRODUCTS = [
     hex: "#F8FAFC",
     swatch: "radial-gradient(circle at 35% 35%, #FFFFFF, #D8DEE6)",
     glow: "rgba(180, 220, 255, 0.22)",
+    spotlight: "rgba(180, 220, 255, 0.13)",
     image: white,
     scale: 0.955,
     shiftY: "0%",
-    price: "$185",
-    desc: "Pure frost mesh upper paired with an icy translucent shank plate for maximum light reflection.",
+    price: null,
   },
   {
     id: "aqua",
@@ -43,11 +47,11 @@ export const PRODUCTS = [
     hex: "#00E5FF",
     swatch: "linear-gradient(160deg, #F4F4F4 45%, #19C8DC 100%)",
     glow: "rgba(0, 229, 255, 0.30)",
+    spotlight: "rgba(0, 229, 255, 0.16)",
     image: aqua,
     scale: 0.965,
     shiftY: "0%",
-    price: "$190",
-    desc: "Electric cyan gradient fade mimicking Pacific swell dynamics with high-vis reflective ribbing.",
+    price: null,
   },
   {
     id: "burgundy",
@@ -56,15 +60,17 @@ export const PRODUCTS = [
     hex: "#800020",
     swatch: "linear-gradient(160deg, #7A1230 55%, #0A0A0A 100%)",
     glow: "rgba(128, 0, 32, 0.35)",
+    spotlight: "rgba(128, 0, 32, 0.22)",
     image: burgundy,
     scale: 1.0,
     shiftY: "0%",
-    price: "$195",
-    desc: "Deep wine gradient mesh surrounded by jet-black mudguards and high-tension lacing.",
+    price: null,
   },
 ];
 
 export const DEFAULT_INDEX = 0;
+
+export const SIZES = ["40", "41", "42", "43", "44", "45", "46"];
 
 export const SPECS = [
   "TUNED AIR HEMISPHERIC DAMPERS",
@@ -72,3 +78,6 @@ export const SPECS = [
   "MOLDED RIBBED EXOSKELETON CAGE",
   "GRADIENT HEX-MESH UPPER",
 ];
+
+export const priceLabel = (p) =>
+  p && p.price ? p.price : "PRICE TBD";
