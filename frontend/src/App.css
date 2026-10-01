@@ -1,0 +1,21 @@
+/* TUNED AIR — global helpers */
+
+.marquee-track {
+  animation: marquee-drift 60s linear infinite;
+}
+
+@keyframes marquee-drift {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
+
+img {
+  user-select: none;
+}
