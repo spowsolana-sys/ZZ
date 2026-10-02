@@ -176,14 +176,22 @@ export default function Hero() {
           {priceLabel(p)}
         </p>
         <p
-          className="flex items-center gap-2 font-tech text-[10px] tracking-[0.3em] text-cyan-300/90 mt-3"
+          className={`flex items-center gap-2 font-tech text-[10px] tracking-[0.3em] mt-3 ${
+            p.available ? "text-cyan-300/90" : "text-white/40"
+          }`}
           data-testid="hud-status-badge"
         >
-          <span className="relative flex w-2 h-2">
-            <span className="absolute inline-flex w-full h-full rounded-full bg-cyan-400 opacity-60 animate-ping" />
-            <span className="relative inline-flex w-2 h-2 rounded-full bg-cyan-300" />
-          </span>
-          IN&nbsp;STOCK
+          {p.available ? (
+            <>
+              <span className="relative flex w-2 h-2">
+                <span className="absolute inline-flex w-full h-full rounded-full bg-cyan-400 opacity-60 animate-ping" />
+                <span className="relative inline-flex w-2 h-2 rounded-full bg-cyan-300" />
+              </span>
+              IN&nbsp;STOCK
+            </>
+          ) : (
+            <>SOLD&nbsp;OUT</>
+          )}
         </p>
       </FadeUp>
 

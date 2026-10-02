@@ -30,7 +30,15 @@ Build out the hero into a complete premium futuristic sneaker ecommerce store: p
 ## Verified
 - Routes 200; card click → product page; size → add to cart → drawer with item + count; desktop 1440 + mobile 390 screenshots on home/shop/product; no horizontal overflow.
 
+## Shopify readiness (2026-10-02)
+- Data layer restructured to a Shopify-shaped schema in /app/frontend/src/data/products.js: one PRODUCT (handle, title, vendor, description, availableForSale, priceRange, options) with 4 variants — each variant = { id, title, selectedOptions.Color, own separate image asset, price: null (EDIT VIA SHOPIFY), available, presentation fields }.
+- /app/frontend/src/data/shopifyAdapter.js: mapShopifyProduct(raw) converts a Storefront API GraphQL product JSON into the app's exact PRODUCT shape — swapping the local schema for a live Shopify fetch requires no UI changes. Prices/availability then flow from Shopify; nothing hardcoded.
+- priceLabel() accepts null ("PRICE TBD"), Shopify {amount, currencyCode} (Intl-formatted) or raw string/number.
+- Status LEDs (hero + product page) now render from variant.available: pulsing IN STOCK / dim SOLD OUT.
+- Product-page breadcrumb reads PRODUCT.title. The four uploaded images remain separate per-variant assets.
+- Journey verified e2e: home → shop → white card → /product/white showing HYPER WHITE GLACIER + sneaker-white asset → burgundy selector → carousel switch → BURGUNDY VOLT + burgundy atmosphere. Carousel, idle float, centering, availability and PRICE TBD all confirmed on desktop + mobile.
+
 ## Backlog
-- P0: Shopify connection (real prices, checkout) — price field already isolated in products.js
+- P0: Live Shopify connection (Storefront API fetch → mapShopifyProduct, real prices + checkout) — schema + adapter already in place
 - P1: Persistent cart (localStorage), real checkout handoff
-- P2: Archive/story sections, mobile menu overlay, variant transition animation on product page
+- P2: Archive/story sections, mobile menu overlay

@@ -8,7 +8,7 @@ import {
   useTransform,
 } from "framer-motion";
 import { toast } from "sonner";
-import { PRODUCTS, SIZES, priceLabel } from "@/data/products";
+import { PRODUCT, PRODUCTS, SIZES, priceLabel } from "@/data/products";
 import ProductStage from "@/components/ProductStage";
 import ColorSelectors from "@/components/ColorSelectors";
 import { useCart } from "@/context/CartContext";
@@ -98,7 +98,7 @@ export default function Product() {
           SHOP
         </Link>
         <span className="mx-2">/</span>
-        <span className="text-cyan-300/80">AIR&nbsp;MAX&nbsp;PLUS&nbsp;TN</span>
+        <span className="text-cyan-300/80">{PRODUCT.title}</span>
       </motion.p>
 
       {/* immersive carousel stage */}
@@ -178,12 +178,22 @@ export default function Product() {
         >
           {priceLabel(p)}
         </p>
-        <p className="flex items-center gap-2 font-tech text-[10px] tracking-[0.3em] text-cyan-300/90 mt-2 sm:mt-3">
-          <span className="relative flex w-2 h-2">
-            <span className="absolute inline-flex w-full h-full rounded-full bg-cyan-400 opacity-60 animate-ping" />
-            <span className="relative inline-flex w-2 h-2 rounded-full bg-cyan-300" />
-          </span>
-          IN&nbsp;STOCK
+        <p
+          className={`flex items-center gap-2 font-tech text-[10px] tracking-[0.3em] mt-2 sm:mt-3 ${
+            p.available ? "text-cyan-300/90" : "text-white/40"
+          }`}
+        >
+          {p.available ? (
+            <>
+              <span className="relative flex w-2 h-2">
+                <span className="absolute inline-flex w-full h-full rounded-full bg-cyan-400 opacity-60 animate-ping" />
+                <span className="relative inline-flex w-2 h-2 rounded-full bg-cyan-300" />
+              </span>
+              IN&nbsp;STOCK
+            </>
+          ) : (
+            <>SOLD&nbsp;OUT</>
+          )}
         </p>
       </motion.div>
 
