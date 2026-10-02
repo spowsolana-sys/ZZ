@@ -1,9 +1,15 @@
 import { useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  useMotionValue,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 import { toast } from "sonner";
 import { PRODUCTS, SIZES, priceLabel } from "@/data/products";
-import SneakerStage from "@/components/SneakerStage";
+import ProductStage from "@/components/ProductStage";
 import ColorSelectors from "@/components/ColorSelectors";
 import { useCart } from "@/context/CartContext";
 
@@ -48,6 +54,22 @@ export default function Product() {
       data-testid="product-page"
       onMouseMove={onMouseMove}
     >
+      {/* per-variant ambient background tint */}
+      <AnimatePresence>
+        <motion.div
+          key={p.id}
+          aria-hidden="true"
+          className="absolute inset-0 z-0 pointer-events-none"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1.2, ease: "easeInOut" }}
+          style={{
+            background: `radial-gradient(65% 55% at 50% 52%, ${p.spotlight} 0%, transparent 100%)`,
+          }}
+        />
+      </AnimatePresence>
+
       {/* giant variant index behind the shoe */}
       <motion.div
         aria-hidden="true"
@@ -79,8 +101,8 @@ export default function Product() {
         <span className="text-cyan-300/80">AIR&nbsp;MAX&nbsp;PLUS&nbsp;TN</span>
       </motion.p>
 
-      {/* immersive stage */}
-      <SneakerStage
+      {/* immersive carousel stage */}
+      <ProductStage
         products={PRODUCTS}
         active={idx}
         shoeX={shoeX}
@@ -88,7 +110,7 @@ export default function Product() {
       />
 
       {/* left — variant identity */}
-      <div className="absolute z-30 left-6 sm:left-10 top-[64%] sm:top-[58%] max-w-[220px]">
+      <div className="absolute z-30 left-6 sm:left-10 top-[56%] sm:top-[58%] max-w-[220px]">
         <motion.div
           key={p.id}
           initial={{ opacity: 0, x: -18 }}
@@ -104,7 +126,7 @@ export default function Product() {
           >
             {p.name}
           </h1>
-          <p className="font-tech text-[10px] tracking-[0.3em] text-cyan-300/80 mt-3">
+          <p className="font-tech text-[10px] tracking-[0.3em] text-cyan-300/80 mt-3 hidden sm:block">
             AIR&nbsp;MAX&nbsp;PLUS&nbsp;—&nbsp;VARIANT&nbsp;{p.index}
           </p>
         </motion.div>

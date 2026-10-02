@@ -24,7 +24,8 @@ Build out the hero into a complete premium futuristic sneaker ecommerce store: p
 ## Implemented (2026-10-01)
 - First build: hero section, assets, normalization, selectors, typography, marquee, lenis, parallax.
 - Store expansion: router + shared nav/footer, home bento + statement, shop catalog, immersive product pages, cart context + drawer + toasts, price placeholder system, responsive fixes (mobile product stack, shop headline wrap), click-through fix on selectors strip.
-- data-testids across nav, cards, sizes, add-to-cart, cart drawer, selectors, titles.
+- Immersive carousel (ProductStage.jsx): vertical physical carousel — on variant switch the current sneaker travels DOWN out of the overflow-hidden viewport (scale -> 0.94, fades near the end) while the next descends from ABOVE into center (scale 0.94 -> 1); both visible mid-flight, images never crossfaded/recolored. Page entrance replays the descent from above. Idle levitation loop, detached soft shadow (black base + per-variant tinted glow, counter-phased breathing), per-variant ambient spotlight + page-wide radial tint crossfade, per-variant drop-shadow glow. All four variants stay pixel-aligned (identical stacked frame + halo-compensation scales).
+- data-testids across nav, cards, sizes, add-to-cart, cart drawer, selectors, titles, product-stage.
 
 ## Verified
 - Routes 200; card click → product page; size → add to cart → drawer with item + count; desktop 1440 + mobile 390 screenshots on home/shop/product; no horizontal overflow.
