@@ -100,6 +100,8 @@ export default function Product() {
 
   if (idx < 0) return <Navigate to="/catalogue" replace />;
   const p = PRODUCTS[idx];
+  const siblings = PRODUCTS.filter((v) => v.productHandle === p.productHandle);
+  const activeIdx = siblings.findIndex((v) => v.id === p.id);
   const wished = wishlist.includes(p.id);
 
   const onMouseMove = (e) => {
@@ -195,11 +197,11 @@ export default function Product() {
           <span className="text-black/70">{p.title}</span>
         </motion.p>
 
-        {/* scène carrousel */}
-        <ProductStage products={PRODUCTS} active={idx} shoeX={shoeX} shoeY={shoeY} />
+        {/* scène carrousel — uniquement les variantes du même produit */}
+        <ProductStage products={siblings} active={activeIdx} shoeX={shoeX} shoeY={shoeY} />
 
-        {/* identité + actions secondaires */}
-        <div className="absolute z-30 left-6 sm:left-10 top-[54%] sm:top-[58%] max-w-[240px]">
+        {/* identité + actions secondaires — desktop (mobile : panneau bas) */}
+        <div className="hidden sm:block absolute z-30 left-10 top-[58%] max-w-[240px]">
           <motion.div
             key={p.id}
             initial={{ opacity: 0, x: -18 }}
@@ -224,8 +226,8 @@ export default function Product() {
           </motion.div>
         </div>
 
-        {/* tailles — colonne droite (desktop) / ligne (mobile) */}
-        <div className="absolute z-30 left-6 right-6 sm:left-auto sm:right-10 bottom-[232px] sm:bottom-auto sm:top-[42%]">
+        {/* tailles — colonne droite (desktop) / panneau bas (mobile) */}
+        <div className="hidden sm:block absolute z-30 sm:right-10 sm:top-[42%]">
           <motion.div
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
@@ -262,12 +264,12 @@ export default function Product() {
           </motion.div>
         </div>
 
-        {/* prix + disponibilité */}
+        {/* prix + disponibilité — desktop (mobile : panneau bas) */}
         <motion.div
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.55, ease: EASE }}
-          className="absolute z-30 left-6 sm:left-10 bottom-[152px] sm:bottom-9"
+          className="hidden sm:block absolute z-30 left-10 bottom-9"
         >
           <div className="flex items-baseline gap-3">
             <p
@@ -306,12 +308,12 @@ export default function Product() {
           </p>
         </motion.div>
 
-        {/* actions principales */}
+        {/* actions principales — desktop (mobile : panneau bas) */}
         <motion.div
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.65, ease: EASE }}
-          className="absolute z-30 left-6 right-6 sm:left-auto sm:right-10 bottom-28 sm:bottom-28 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3"
+          className="hidden sm:flex absolute z-30 sm:right-10 sm:bottom-28 items-center gap-3"
         >
           <div className="flex gap-2">
             <button
@@ -352,8 +354,114 @@ export default function Product() {
           </button>
         </motion.div>
 
-        {/* sélecteurs de coloris */}
-        <ColorSelectors products={PRODUCTS} active={idx} />
+        {/* sélecteurs de coloris — variantes du même produit uniquement (desktop) */}
+        <div className="hidden sm:block">
+          <ColorSelectors products={siblings} active={activeIdx} />
+        </div>
+
+        {/* ---------- panneau d'achat mobile — flux empilé ---------- */}
+        <div
+          className="sm:hidden absolute z-30 inset-x-0 bottom-0 bg-white/90 backdrop-blur-md border-t border-black/10 px-5 pt-4 pb-4 flex flex-col gap-3"
+          data-testid="mobile-buy-panel"
+        >
+          <h1
+            className="font-display text-lg font-bold text-black leading-snug"
+            data-testid="product-variant-name-mobile"
+          >
+            {p.name}
+          </h1>
+          <div className="flex items-center justify-between gap-3">
+            <button
+              type="button"
+              onClick={() => setGalleryOpen(true)}
+              data-testid="gallery-open-button-mobile"
+              className="inline-flex items-center gap-2 font-tech text-[10px] tracking-[0.25em] text-black/70 border border-black/20 rounded-full px-4 py-2 hover:border-black hover:text-black transition-colors duration-300 cursor-pointer"
+            >
+              <Images className="w-3.5 h-3.5" />
+              Plus de photos
+            </button>
+            <ColorSelectors products={siblings} active={activeIdx} idPrefix="mobile-" />
+          </div>
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <p className="font-tech text-[10px] tracking-[0.4em] text-black/40">TAILLE</p>
+              <button
+                type="button"
+                onClick={() => setGuideOpen(true)}
+                data-testid="size-guide-open-mobile"
+                className="font-tech text-[9px] tracking-[0.25em] text-black/45 underline underline-offset-4 hover:text-black cursor-pointer"
+              >
+                Guide des tailles
+              </button>
+            </div>
+            <div className="flex flex-nowrap gap-1.5">
+              {SIZES.map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() => setSize(s)}
+                  data-testid={`size-chip-mobile-${s}`}
+                  className={`shrink-0 w-10 h-9 font-tech text-[10px] tracking-[0.1em] border transition-all duration-300 cursor-pointer ${
+                    size === s
+                      ? "border-black bg-black text-white"
+                      : "border-black/20 text-black/60 hover:border-black/60 hover:text-black"
+                  }`}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="flex items-center justify-between">
+            <p className="font-display font-bold text-base text-black" data-testid="product-price-mobile">
+              {priceLabel(p)}
+            </p>
+            <p className="flex items-center gap-2 font-tech text-[10px] tracking-[0.3em] text-black/60">
+              <span className="relative flex w-2 h-2">
+                <span className="absolute inline-flex w-full h-full rounded-full bg-black/30 opacity-60 animate-ping" />
+                <span className="relative inline-flex w-2 h-2 rounded-full bg-black" />
+              </span>
+              EN&nbsp;STOCK
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={onWish}
+              data-testid="wishlist-button-mobile"
+              aria-label="Ajouter à la wishlist"
+              className="shrink-0 flex items-center justify-center w-11 h-11 rounded-full border border-black/20 hover:border-black transition-colors cursor-pointer"
+            >
+              <Heart className={`w-4 h-4 ${wished ? "fill-black text-black" : "text-black/60"}`} />
+            </button>
+            <button
+              type="button"
+              onClick={onShare}
+              data-testid="share-button-mobile"
+              aria-label="Partager"
+              className="shrink-0 flex items-center justify-center w-11 h-11 rounded-full border border-black/20 hover:border-black transition-colors cursor-pointer"
+            >
+              <Share2 className="w-4 h-4 text-black/60" />
+            </button>
+            <button
+              type="button"
+              onClick={onAdd}
+              data-testid="add-to-cart-button-mobile"
+              className="flex-1 font-tech text-[12px] tracking-[0.2em] text-white bg-black rounded-full px-6 py-3 hover:bg-black/85 transition-colors duration-300 cursor-pointer"
+            >
+              Ajouter au panier
+            </button>
+          </div>
+          <button
+            type="button"
+            onClick={onBuyNow}
+            data-testid="buy-now-button-mobile"
+            className="inline-flex items-center justify-center gap-2 font-tech text-[12px] tracking-[0.2em] text-black border border-black/30 rounded-full px-6 py-3 hover:bg-black hover:text-white transition-colors duration-300 cursor-pointer"
+          >
+            <Zap className="w-4 h-4" />
+            Acheter maintenant
+          </button>
+        </div>
       </div>
 
       {/* ---------- sections détailles (accordéons) ---------- */}

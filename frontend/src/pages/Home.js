@@ -117,7 +117,12 @@ function Hero() {
         </motion.div>
       </div>
 
-      <SneakerStage products={PRODUCTS} active={0} shoeX={shoeX} shoeY={shoeY} />
+      <SneakerStage
+        products={PRODUCTS.filter((v) => v.productHandle === "tn-sneaker")}
+        active={0}
+        shoeX={shoeX}
+        shoeY={shoeY}
+      />
     </section>
   );
 }
@@ -181,7 +186,7 @@ function Categories() {
               <div className="relative aspect-[4/5] bg-[#F6F6F5] border border-black/5 overflow-hidden flex items-center justify-center">
                 {c.img ? (
                   <img
-                    src={PRODUCTS[2].image}
+                    src={PRODUCTS.find((p) => p.id === "cyan").image}
                     alt={`ZEV SHOP — ${c.label}`}
                     draggable="false"
                     loading="lazy"

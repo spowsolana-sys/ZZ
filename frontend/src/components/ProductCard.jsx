@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, Heart } from "lucide-react";
-import { priceLabel } from "@/data/products";
+import { priceLabel, PRODUCT_COUNT } from "@/data/products";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
 
@@ -60,7 +60,7 @@ export default function ProductCard({ product: p, feature = false }) {
         />
         </div>
         <span className="absolute top-4 left-5 font-tech text-[10px] tracking-[0.35em] text-black/35">
-          {p.index}&nbsp;/&nbsp;04
+          {p.index}&nbsp;/&nbsp;{String(PRODUCT_COUNT).padStart(2, "0")}
         </span>
         <span className="absolute top-4 right-5 flex items-center gap-1.5 font-tech text-[10px] tracking-[0.35em] text-black/70 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500">
           VOIR
@@ -68,9 +68,14 @@ export default function ProductCard({ product: p, feature = false }) {
         </span>
       </div>
       <div className="flex items-end justify-between px-5 py-5 border-t border-black/10">
-        <h3 className="font-display text-sm sm:text-base font-bold text-black leading-snug">
-          {p.name}
-        </h3>
+        <div className="min-w-0">
+          <h3 className="font-display text-sm sm:text-base font-bold text-black leading-snug truncate">
+            {p.productTitle}
+          </h3>
+          <p className="font-tech text-[10px] tracking-[0.25em] text-black/45 mt-1 uppercase truncate">
+            {p.selectedOptions.Color}
+          </p>
+        </div>
         <p
           className="font-tech text-[11px] tracking-[0.2em] text-black/55 shrink-0 pl-4"
           data-testid={`product-card-price-${p.id}`}
