@@ -34,7 +34,7 @@ export default function CartDrawer() {
         currency: "EUR",
         minimumFractionDigits: total % 1 === 0 ? 0 : 2,
       }).format(total)
-    : "PRIX BIENTÔT";
+    : "Prix à définir";
 
   const onCheckout = () => {
     toast("PAIEMENT DISPONIBLE À LA CONNEXION DE SHOPIFY");
