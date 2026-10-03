@@ -92,17 +92,20 @@ export default function ProductStage({ products, active, shoeX, shoeY }) {
           </AnimatePresence>
         </motion.div>
 
-        {/* detached soft shadow — crossfades density with the variant */}
+        {/* detached soft shadow — reacts to float and color transitions */}
         <div className="relative w-[42%] h-8 sm:h-9 -mt-5 sm:-mt-6">
           <AnimatePresence>
             <motion.div
               key={p.id}
-              className="absolute inset-0 rounded-[100%] blur-2xl"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+              className="absolute inset-0"
+              initial={{ opacity: 0, scaleX: 0.8 }}
+              animate={{ opacity: 1, scaleX: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.8, ease: "easeInOut" }}
-              style={{ background: p.shadowTint }}
+              transition={{
+                opacity: { duration: 0.8, ease: "easeInOut" },
+                scaleX: { duration: 0.8, ease: EASE },
+              }}
+              style={{ background: p.shadowTint, borderRadius: "100%" }}
             />
           </AnimatePresence>
           <motion.div

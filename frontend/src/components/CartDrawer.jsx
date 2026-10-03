@@ -10,6 +10,32 @@ const EASE = [0.16, 1, 0.3, 1];
 export default function CartDrawer() {
   const { items, open, setOpen, setQty, remove, count } = useCart();
 
+  // Total automatique : si un seul prix manque (non défini Shopify),
+  // le total reste en placeholder — aucun prix inventé.
+  let total = 0;
+  let allPriced = items.length > 0;
+  for (const item of items) {
+    const p = PRODUCTS.find((pr) => pr.id === item.variantId);
+    const price = p && p.price;
+    if (
+      price &&
+      typeof price === "object" &&
+      price.amount !== undefined &&
+      price.amount !== null
+    ) {
+      total += Number(price.amount) * item.qty;
+    } else {
+      allPriced = false;
+    }
+  }
+  const totalLabel = allPriced
+    ? new Intl.NumberFormat("fr-FR", {
+        style: "currency",
+        currency: "EUR",
+        minimumFractionDigits: total % 1 === 0 ? 0 : 2,
+      }).format(total)
+    : "PRIX BIENTÔT";
+
   const onCheckout = () => {
     toast("PAIEMENT DISPONIBLE À LA CONNEXION DE SHOPIFY");
   };
@@ -143,11 +169,25 @@ export default function CartDrawer() {
 
             {items.length > 0 && (
               <div className="px-6 py-6 border-t border-black/10">
+                <div
+                  className="flex items-center justify-between mb-4"
+                  data-testid="cart-total-row"
+                >
+                  <p className="font-tech text-[10px] tracking-[0.35em] text-black/45">
+                    TOTAL
+                  </p>
+                  <p
+                    className="font-display text-sm font-bold text-black"
+                    data-testid="cart-total"
+                  >
+                    {totalLabel}
+                  </p>
+                </div>
                 <button
                   type="button"
                   onClick={onCheckout}
                   data-testid="cart-checkout-button"
-                  className="w-full font-tech text-[11px] tracking-[0.3em] text-white bg-black rounded-full py-4 hover:bg-black/85 transition-colors duration-300 cursor-pointer"
+                  className="w-full font-tech text-[11px] tracking-[0.3em] text-white bg-black rounded-full py-4 hover:bg-black/85 active:scale-[0.99] transition-all duration-300 cursor-pointer"
                 >
                   COMMANDER
                 </button>

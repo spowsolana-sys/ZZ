@@ -3,6 +3,15 @@
 ## Original Problem Statement (latest)
 Simplify the existing site into a professional fashion ecommerce store called ZEV SHOP. Replace the brand with ZEV SHOP and use the uploaded Z logo as the main logo. White main background — no large colorful gradients or futuristic backgrounds. Keep the existing sneaker animations (floating idle, detached shadow, vertical carousel) exactly as they are. Catalogue = sneakers only, four variants: TN NOIR, TN BLANCHE, TN CYAN, TN ROUGE — clean, spacious, image-focused, no long descriptions. Simple French header: ZEV SHOP, Catalogue, Vêtements (dropdown: T-shirts, Pantalons, Sweats à capuche, Ensembles, Pulls, Shorts, Shorts de bain), Accessoires (dropdown: Chaussures, Sacoches, Claquettes, Bonnets, Casquettes, Lunettes, Bracelets), Suivi de commande, Cart. Only Chaussures contains the TN products; other categories stay empty — no fake products. Clicking a sneaker opens its product page with the immersive animation. Prices stay editable/undefined (PRIX BIENTÔT) for Shopify.
 
+## Passe de finition (2026-10-03)
+- Ombre produit: réagit maintenant à la transition (scale-in 0.8->1 synchronisé 0.8 s + crossfade teinte) en plus du flottement.
+- Panier: ligne TOTAL automatique (total = somme des prix x quantités; reste "PRIX BIENTÔT" tant qu'un prix manque — aucun prix inventé) au-dessus de COMMANDER.
+- Transitions de pages: fondu d'entrée 0.4 s par navigation (PageTransition keyée par segment de route — /produit/noir -> /produit/blanche ne remonte PAS la page, le carrousel reste monté).
+- Micro-interactions: retour visuel au press (button:active scale 0.97 global), hover existants conservés.
+- Performance: lazy + decoding async sur les images de cartes, will-change sur le marquee.
+- BUG corrigé pendant la vérification: ReferenceError "motion is not defined" dans PageTransition (import framer-motion manquant dans App.js) -> page blanche via ErrorBoundary; corrigé et parcours complet re-validé.
+- Parcours final vérifié (10 étapes): accueil/intro -> DÉCOUVRIR -> hero -> catalogue (4 cartes) -> produit TN ROUGE -> transition vers TN NOIR (croisement visible, Z centré, couleur progressive) -> taille 43 -> Ajouter au panier (badge 1) -> quantité + (2) -> - (1) -> suppression (panier vide) -> retour catalogue sans overflow.
+
 ## Prior Heritage (kept)
 - Four uploaded transparent sneaker PNGs — separate per-variant assets, never combined.
 - Assets: TN CYAN + TN ROUGE images replaced (2026-10-03) with the newly uploaded photos (682x490 / 675x455, transparent, tighter framing); saved under the same filenames (sneaker-aqua.png / sneaker-burgundy.png). Normalization recomputed against the noir/blanche reference: cyan scale 0.601 shiftY 2%, rouge scale 0.557 shiftY 6% — verified identical on-screen shoe size/position in stage (3/2), catalogue cards (3/2, normalization on a wrapper div so hover transforms still work) and cart thumbnails. Carousel re-verified mid-flight with both new images.

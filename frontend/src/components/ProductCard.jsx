@@ -25,13 +25,15 @@ export default function ProductCard({ product: p, feature = false }) {
           className="relative w-full h-full"
           style={{ transform: `scale(${p.scale}) translateY(${p.shiftY})` }}
         >
-          <img
-            src={p.image}
-            alt={`ZEV SHOP — ${p.name}`}
-            draggable="false"
-            className="relative w-full h-full object-contain select-none pointer-events-none transition-transform duration-700 ease-out group-hover:scale-[1.06] group-hover:-translate-y-2"
-            style={{ filter: `drop-shadow(0 24px 22px ${p.glow})` }}
-          />
+        <img
+          src={p.image}
+          alt={`ZEV SHOP — ${p.name}`}
+          draggable="false"
+          loading="lazy"
+          decoding="async"
+          className="relative w-full h-full object-contain select-none pointer-events-none transition-transform duration-700 ease-out group-hover:scale-[1.06] group-hover:-translate-y-2"
+          style={{ filter: `drop-shadow(0 24px 22px ${p.glow})` }}
+        />
         </div>
         <span className="absolute top-4 left-5 font-tech text-[10px] tracking-[0.35em] text-black/35">
           {p.index}&nbsp;/&nbsp;04

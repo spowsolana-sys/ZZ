@@ -1,5 +1,6 @@
 import { useEffect, Component } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { motion } from "framer-motion";
 import Lenis from "lenis";
 import { Toaster } from "sonner";
 import { CartProvider } from "@/context/CartContext";
@@ -40,6 +41,35 @@ function ScrollToTop() {
   return null;
 }
 
+/* Transition douce entre les pages — key au niveau page uniquement :
+   /produit/noir -> /produit/blanche ne remonte PAS la page (le carrousel
+   de variantes reste monté et joue sa propre transition). */
+function PageTransition() {
+  const { pathname } = useLocation();
+  const pageKey = "/" + pathname.split("/")[1];
+  return (
+    <motion.div
+      key={pageKey}
+      id="page-transition"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
+      className="contents"
+    >
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/catalogue" element={<Catalogue />} />
+        <Route path="/categorie/:slug" element={<CategoryPage />} />
+        <Route path="/produit/:id" element={<Product />} />
+        <Route path="/suivi" element={<Suivi />} />
+        <Route path="*" element={<Home />} />
+      </Routes>
+      <Footer />
+      <CartDrawer />
+    </motion.div>
+  );
+}
+
 function App() {
   useEffect(() => {
     const lenis = new Lenis({ duration: 1.2, smoothWheel: true });
@@ -63,16 +93,7 @@ function App() {
         <ErrorBoundary>
           <ScrollToTop />
           <Nav />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/catalogue" element={<Catalogue />} />
-            <Route path="/categorie/:slug" element={<CategoryPage />} />
-            <Route path="/produit/:id" element={<Product />} />
-            <Route path="/suivi" element={<Suivi />} />
-            <Route path="*" element={<Home />} />
-          </Routes>
-          <Footer />
-          <CartDrawer />
+          <PageTransition />
         </ErrorBoundary>
       </BrowserRouter>
       <Toaster
