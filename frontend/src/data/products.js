@@ -81,8 +81,8 @@ export const CATALOG = [
         spotlight: "rgba(0, 0, 0, 0.05)",
         shadowTint: "rgba(10, 10, 10, 0.26)",
         zTint: "rgba(85, 115, 175, 0.16)",
-        scale: 0.643,
-        shiftY: "-1.4%",
+        scale: 0.596,
+        shiftY: "0.3%",
         gallery: gallery(asicsB),
       },
       {
