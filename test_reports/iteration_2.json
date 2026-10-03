@@ -1,0 +1,25 @@
+{
+  "summary": "E2E testing of the premium 2.5D ShoeMotion animation system (ShoeFloat idle levitation, useShoeTilt cursor tilt, ShoeTiltLayer, reactive shadow) across product stage, home hero, and catalogue cards. All 5 pages (/, /catalogue, /compte, /produit/asics-01, /produit/noir) render without ErrorBoundary — the 'motion is not defined' regression is confirmed FIXED. Idle float animation is active (transforms change frame-to-frame), cursor tilt generates real matrix3d perspective shear (~0.09-0.14), pointer-leave produces smooth spring return (identity matrix reached only ~900ms later, no snap). Carousel entry/exit animation preserved intact (2 items mid-flight, 1 after ~800ms). Reduced-motion honored (transforms frozen to 'none'). Mobile 390 has no horizontal overflow, mobile-buy-panel adds to cart (badge=1), no scroll blocking. Full e2e wishlist flow passes: guest toast, login test@zevshop.com, authenticated add from /produit/asics-01, item appears in /compte wishlist tab. Iteration_1 bugs confirmed FIXED: wishlist tab titles no longer clipped (sw==cw, text 'TN' fully visible), CartDrawer total now shows 'Prix à définir' (consistent copy).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": ["/app/test_reports/iteration_2.json"],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "ShoeMotion.js: FINE_POINTER is evaluated once at module load. If a user plugs/unplugs a fine pointer at runtime or the matchMedia resolves after SSR hydration edge cases, the enabled flag won't update. Current implementation is fine for a CSR-only app, but a `useMediaQuery` would be more robust.",
+    "ProductCard.jsx: ShoeTiltLayer is wrapped around a motion.div which also has style={{scale, y}}. Nesting an additional motion.div inside the tilt layer (for the hover scale/y) works, but combining `hoverScale` on ShoeTiltLayer (currently set to 0) with the outer motion.div is slightly duplicate — hoverScale could be driven directly on the inner motion.div to simplify. Non-blocking.",
+    "SneakerStage.jsx: `tilt.bind` is attached to the outer wrapper that is translated by the global parallax (shoeX/shoeY). Rect is captured on pointer enter, so this is fine, but note that mouse/parallax interaction is intentionally stacked.",
+    "ProductStage.jsx: tilt layer sits inside the AnimatePresence child so each variant switch instantiates a fresh ShoeTiltLayer. If the user is actively tilting during a carousel swap, the tilt resets as new element mounts (acceptable UX)."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "100% (not retested, iteration_1 was green)", "frontend": "100%"},
+  "test_credentials": "test@zevshop.com / Test1234! — login OK through /compte UI (auth-submit-button) and wishlist persistence confirmed.",
+  "seed_data_creation": "None — reused existing test user.",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Verified premium 2.5D animation system in production preview: idle float transforms oscillate (matrix y ~ 3-9px, rotate ~0.013rad), cursor tilt produces matrix3d with shear 0.09-0.14, pointer-leave reaches identity only after ~900ms (spring 55/15/0.7 behaves as spec). Carousel key=p.id preserved — 2 items mid-flight on color swap, 1 after. Reduced-motion via page.emulate_media(reduced_motion='reduce') yields transform=none on ShoeFloat (correct). Mobile 390: FINE_POINTER=false ⇒ bind events are no-ops ⇒ no scroll interference. Catalogue cards: titles not truncated (sw==cw==270), hover tilt active, idle float active. Hero home: #zev-hero present, SneakerStage tilt + float active. Wishlist/cart/login flow unchanged. No new JS console errors (only expected 401 on /api/auth/me for guest).",
+  "rca of the issue": "N/A — no bugs found in this iteration. The previously reported ProductCard 'motion is not defined' crash is confirmed fixed by the `import { motion, useTransform } from 'framer-motion'` at the top of ProductCard.jsx."
+}
