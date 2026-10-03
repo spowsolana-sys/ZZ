@@ -4,7 +4,8 @@ import { motion } from "framer-motion";
 import Lenis from "lenis";
 import { Toaster } from "sonner";
 import { CartProvider } from "@/context/CartContext";
-import Nav from "@/components/Nav";
+import { AuthProvider } from "@/context/AuthContext";
+import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
 import Home from "@/pages/Home";
@@ -12,6 +13,9 @@ import Catalogue from "@/pages/Catalogue";
 import Product from "@/pages/Product";
 import Suivi from "@/pages/Suivi";
 import CategoryPage from "@/pages/Categories";
+import Compte from "@/pages/Compte";
+import Checkout from "@/pages/Checkout";
+import { Livraison, Retours, APropos, Faq, Contact } from "@/pages/Pages";
 
 class ErrorBoundary extends Component {
   constructor(props) {
@@ -62,6 +66,13 @@ function PageTransition() {
         <Route path="/categorie/:slug" element={<CategoryPage />} />
         <Route path="/produit/:id" element={<Product />} />
         <Route path="/suivi" element={<Suivi />} />
+        <Route path="/compte" element={<Compte />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/livraison" element={<Livraison />} />
+        <Route path="/retours" element={<Retours />} />
+        <Route path="/a-propos" element={<APropos />} />
+        <Route path="/faq" element={<Faq />} />
+        <Route path="/contact" element={<Contact />} />
         <Route path="*" element={<Home />} />
       </Routes>
       <Footer />
@@ -92,8 +103,10 @@ function App() {
       <BrowserRouter>
         <ErrorBoundary>
           <ScrollToTop />
-          <Nav />
-          <PageTransition />
+          <AuthProvider>
+            <Header />
+            <PageTransition />
+          </AuthProvider>
         </ErrorBoundary>
       </BrowserRouter>
       <Toaster

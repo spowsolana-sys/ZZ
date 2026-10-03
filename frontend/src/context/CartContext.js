@@ -1,10 +1,23 @@
-import { createContext, useContext, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 const CartContext = createContext(null);
 
 export function CartProvider({ children }) {
-  const [items, setItems] = useState([]);
+  // Persistance locale : le panier survit aux rechargements
+  const [items, setItems] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("zev-cart")) || [];
+    } catch (e) {
+      return [];
+    }
+  });
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("zev-cart", JSON.stringify(items));
+    } catch (e) {}
+  }, [items]);
 
   const add = (variantId, size) => {
     const key = `${variantId}-${size}`;

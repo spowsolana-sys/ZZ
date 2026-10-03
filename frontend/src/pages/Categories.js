@@ -2,7 +2,7 @@ import { Link, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import ProductCard from "@/components/ProductCard";
 import { PRODUCTS } from "@/data/products";
-import { VETEMENTS, ACCESSOIRES } from "@/components/Nav";
+import { VETEMENTS, ACCESSOIRES } from "@/components/Header";
 
 const EASE = [0.16, 1, 0.3, 1];
 

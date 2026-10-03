@@ -41,6 +41,8 @@ export const PRODUCT = {
       selectedOptions: { Color: "Noir" },
       image: black,
       price: null, // DÉFINI VIA SHOPIFY
+      oldPrice: null, // ancien prix (affiché barré si défini)
+      discountPercent: null, // % promotion (affiché si défini)
       available: true,
       swatch: "radial-gradient(circle at 35% 35%, #2E2E2E, #050505)",
       glow: "rgba(0, 0, 0, 0.30)",
@@ -64,6 +66,8 @@ export const PRODUCT = {
       selectedOptions: { Color: "Blanche" },
       image: white,
       price: null, // DÉFINI VIA SHOPIFY
+      oldPrice: null, // ancien prix (affiché barré si défini)
+      discountPercent: null, // % promotion (affiché si défini)
       available: true,
       swatch: "radial-gradient(circle at 35% 35%, #FFFFFF, #D8DEE6)",
       glow: "rgba(0, 0, 0, 0.14)",
@@ -87,6 +91,8 @@ export const PRODUCT = {
       selectedOptions: { Color: "Cyan" },
       image: aqua,
       price: null, // DÉFINI VIA SHOPIFY
+      oldPrice: null, // ancien prix (affiché barré si défini)
+      discountPercent: null, // % promotion (affiché si défini)
       available: true,
       swatch: "linear-gradient(160deg, #F4F4F4 45%, #19C8DC 100%)",
       glow: "rgba(0, 0, 0, 0.24)",
@@ -110,6 +116,8 @@ export const PRODUCT = {
       selectedOptions: { Color: "Rouge" },
       image: burgundy,
       price: null, // DÉFINI VIA SHOPIFY
+      oldPrice: null, // ancien prix (affiché barré si défini)
+      discountPercent: null, // % promotion (affiché si défini)
       available: true,
       swatch: "linear-gradient(160deg, #7A1230 55%, #0A0A0A 100%)",
       glow: "rgba(0, 0, 0, 0.28)",
@@ -148,7 +156,7 @@ export const SIZES = ["40", "41", "42", "43", "44", "45", "46"];
  */
 export function priceLabel(variant) {
   const price = variant && variant.price;
-  if (price === null || price === undefined || price === "") return "PRIX BIENTÔT";
+  if (price === null || price === undefined || price === "") return "Prix à définir";
   if (typeof price === "object" && price.amount !== undefined && price.amount !== null) {
     try {
       return new Intl.NumberFormat("fr-FR", {

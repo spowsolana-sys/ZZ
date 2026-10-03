@@ -1,12 +1,65 @@
+import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
+import { SlidersHorizontal } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
-import { PRODUCTS } from "@/data/products";
+import { PRODUCTS, SIZES } from "@/data/products";
 
 const EASE = [0.16, 1, 0.3, 1];
 
+const TABS = [
+  { id: "tous", label: "TOUS LES PRODUITS" },
+  { id: "nouveautes", label: "NOUVEAUTÉS" },
+  { id: "meilleures", label: "MEILLEURES VENTES" },
+  { id: "promotions", label: "PROMOTIONS" },
+  { id: "chaussures", label: "CHAUSSURES" },
+  { id: "vetements", label: "VÊTEMENTS" },
+  { id: "accessoires", label: "ACCESSOIRES" },
+];
+
+const SORTS = [
+  { id: "pertinence", label: "Pertinence" },
+  { id: "nouveautes", label: "Nouveautés" },
+  { id: "prix-asc", label: "Prix croissant" },
+  { id: "prix-desc", label: "Prix décroissant" },
+  { id: "ventes", label: "Meilleures ventes" },
+];
+
+const EMPTY_NOTE = {
+  meilleures: "Les meilleures ventes s'afficheront automatiquement dès que les données de ventes seront disponibles.",
+  promotions: "Aucune promotion en cours. Les promotions s'afficheront ici automatiquement.",
+  vetements: "Les vêtements arriveront bientôt. Cette catégorie est prête à recevoir les futurs produits.",
+  accessoires: "Les accessoires arriveront bientôt. Cette catégorie est prête à recevoir les futurs produits.",
+};
+
 export default function Catalogue() {
+  const [tab, setTab] = useState("tous");
+  const [fColor, setFColor] = useState(null);
+  const [fSize, setFSize] = useState(null);
+  const [fAvail, setFAvail] = useState(false);
+  const [sort, setSort] = useState("pertinence");
+  const [showFilters, setShowFilters] = useState(false);
+
+  const products = useMemo(() => {
+    let list = [...PRODUCTS];
+    if (tab === "chaussures") list = list; // toutes les TN sont des chaussures
+    else if (tab !== "tous" && tab !== "nouveautes") {
+      if (["meilleures", "promotions", "vetements", "accessoires"].includes(tab)) list = [];
+      if (tab === "nouveautes") list = list;
+    }
+    if (fColor) list = list.filter((p) => p.selectedOptions.Color === fColor);
+    if (fSize) list = list; // toutes les TN existent en 40-46
+    if (fAvail) list = list.filter((p) => p.available);
+    if (sort === "prix-asc" || sort === "prix-desc") {
+      // tri par prix inactif tant que les prix ne sont pas définis
+      list = list;
+    }
+    return list;
+  }, [tab, fColor, fSize, fAvail, sort]);
+
+  const priceSortInactive = sort === "prix-asc" || sort === "prix-desc" || sort === "ventes";
+
   return (
-    <div className="min-h-screen pt-32 pb-24 px-6 sm:px-10 max-w-[1400px] mx-auto">
+    <div className="min-h-screen pt-40 pb-24 px-6 sm:px-10 max-w-[1400px] mx-auto">
       <header className="text-center">
         <motion.p
           initial={{ opacity: 0, y: 14 }}
@@ -14,7 +67,7 @@ export default function Catalogue() {
           transition={{ duration: 0.8, ease: EASE }}
           className="font-tech text-[10px] tracking-[0.45em] text-black/45"
         >
-          04&nbsp;SNEAKERS
+          BOUTIQUE&nbsp;ZEV&nbsp;SHOP
         </motion.p>
         <motion.h1
           initial={{ opacity: 0, y: 22 }}
@@ -25,28 +78,168 @@ export default function Catalogue() {
         >
           CATALOGUE
         </motion.h1>
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.3 }}
-          className="font-tech text-[10px] tracking-[0.35em] text-black/35 mt-5"
-        >
-          COLLECTION&nbsp;TN&nbsp;//&nbsp;QUATRE&nbsp;COLORIS
-        </motion.p>
       </header>
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 mt-14">
-        {PRODUCTS.map((p, i) => (
+      {/* onglets collections */}
+      <div className="flex flex-wrap justify-center gap-x-6 gap-y-3 mt-10">
+        {TABS.map((t) => (
+          <button
+            key={t.id}
+            type="button"
+            onClick={() => setTab(t.id)}
+            data-testid={`catalogue-tab-${t.id}`}
+            className={`font-tech text-[10px] tracking-[0.3em] pb-1 border-b transition-all duration-300 cursor-pointer ${
+              tab === t.id
+                ? "text-black border-black"
+                : "text-black/40 border-transparent hover:text-black/70"
+            }`}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {/* barre filtres + tri */}
+      <div className="flex items-center justify-between gap-4 mt-10 border-y border-black/10 py-4">
+        <button
+          type="button"
+          onClick={() => setShowFilters((s) => !s)}
+          data-testid="filters-toggle"
+          className="flex items-center gap-2 font-tech text-[10px] tracking-[0.3em] text-black/60 hover:text-black transition-colors cursor-pointer"
+        >
+          <SlidersHorizontal className="w-4 h-4" />
+          FILTRES
+          {(fColor || fSize || fAvail) && <span className="w-1.5 h-1.5 rounded-full bg-black" />}
+        </button>
+        <div className="flex items-center gap-3">
+          <span className="hidden sm:inline font-tech text-[9px] tracking-[0.3em] text-black/35">
+            TRI&nbsp;—
+          </span>
+          <select
+            value={sort}
+            onChange={(e) => setSort(e.target.value)}
+            data-testid="sort-select"
+            className="font-tech text-[10px] tracking-[0.2em] text-black/70 border border-black/15 rounded-full px-4 py-2 bg-white focus:outline-none focus:border-black cursor-pointer"
+          >
+            {SORTS.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      {showFilters && (
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, ease: EASE }}
+          className="grid sm:grid-cols-3 gap-8 mt-8 border border-black/10 rounded-3xl p-6"
+          data-testid="filters-panel"
+        >
+          <div>
+            <p className="font-tech text-[9px] tracking-[0.35em] text-black/40 mb-3">COULEUR</p>
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <button
+                type="button"
+                onClick={() => setFColor(null)}
+                data-testid="filter-color-all"
+                className={`font-tech text-[10px] px-3 py-1.5 rounded-full border transition-colors cursor-pointer ${!fColor ? "border-black text-black" : "border-black/15 text-black/50"}`}
+              >
+                TOUTES
+              </button>
+              {PRODUCTS.map((p) => (
+                <button
+                  key={p.id}
+                  type="button"
+                  onClick={() => setFColor(p.selectedOptions.Color)}
+                  data-testid={`filter-color-${p.id}`}
+                  aria-label={`Couleur ${p.selectedOptions.Color}`}
+                  className="w-7 h-7 rounded-full transition-transform hover:scale-110 cursor-pointer"
+                  style={{
+                    background: p.swatch,
+                    boxShadow: fColor === p.selectedOptions.Color ? "0 0 0 2px #0A0A0A" : "0 0 0 1px rgba(0,0,0,0.15)",
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+          <div>
+            <p className="font-tech text-[9px] tracking-[0.35em] text-black/40 mb-3">TAILLE</p>
+            <div className="flex items-center gap-2 flex-wrap">
+              <button
+                type="button"
+                onClick={() => setFSize(null)}
+                data-testid="filter-size-all"
+                className={`font-tech text-[10px] px-3 py-1.5 rounded-full border transition-colors cursor-pointer ${!fSize ? "border-black text-black" : "border-black/15 text-black/50"}`}
+              >
+                TOUTES
+              </button>
+              {SIZES.map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() => setFSize(s)}
+                  data-testid={`filter-size-${s}`}
+                  className={`font-tech text-[10px] w-9 h-8 rounded-lg border transition-colors cursor-pointer ${fSize === s ? "border-black text-black bg-black/[0.04]" : "border-black/15 text-black/50"}`}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div>
+            <p className="font-tech text-[9px] tracking-[0.35em] text-black/40 mb-3">DISPONIBILITÉ</p>
+            <button
+              type="button"
+              onClick={() => setFAvail((a) => !a)}
+              data-testid="filter-availability"
+              className={`font-tech text-[10px] tracking-[0.2em] px-4 py-1.5 rounded-full border transition-colors cursor-pointer ${fAvail ? "border-black text-black bg-black/[0.04]" : "border-black/15 text-black/50"}`}
+            >
+              EN&nbsp;STOCK&nbsp;UNIQUEMENT
+            </button>
+            <p className="font-tech text-[9px] tracking-[0.2em] text-black/30 mt-4 leading-relaxed">
+              Filtres prix &amp; matière : à définir (à la connexion Shopify).
+            </p>
+          </div>
+        </motion.div>
+      )}
+
+      {priceSortInactive && products.length > 0 && (
+        <p className="font-tech text-[9px] tracking-[0.25em] text-black/35 mt-4 text-center" data-testid="sort-note">
+          Tri par prix / ventes : à définir — les prix ne le sont pas encore.
+        </p>
+      )}
+
+      {/* grille produits */}
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 mt-12" data-testid="catalogue-grid">
+        {products.map((p, i) => (
           <motion.div
             key={p.id}
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.2 + i * 0.08, ease: EASE }}
+            transition={{ duration: 0.9, delay: 0.1 + i * 0.07, ease: EASE }}
           >
             <ProductCard product={p} />
           </motion.div>
         ))}
       </div>
+
+      {products.length === 0 && (
+        <div className="mt-16 border border-dashed border-black/15 rounded-3xl py-20 px-8 text-center" data-testid="catalogue-empty">
+          <p className="font-tech text-[11px] tracking-[0.25em] text-black/45">
+            {EMPTY_NOTE[tab] || "Aucun produit dans cette sélection pour le moment."}
+          </p>
+          <button
+            type="button"
+            onClick={() => { setTab("tous"); setFColor(null); setFSize(null); setFAvail(false); }}
+            className="mt-8 font-tech text-[10px] tracking-[0.3em] text-black border-b border-black pb-1 hover:opacity-60 transition-opacity cursor-pointer"
+          >
+            VOIR&nbsp;TOUS&nbsp;LES&nbsp;PRODUITS
+          </button>
+        </div>
+      )}
     </div>
   );
 }

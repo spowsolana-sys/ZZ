@@ -1,14 +1,38 @@
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Heart } from "lucide-react";
 import { priceLabel } from "@/data/products";
+import { useAuth } from "@/context/AuthContext";
+import { toast } from "sonner";
 
 export default function ProductCard({ product: p, feature = false }) {
+  const { user, wishlist, toggleWishlist } = useAuth();
+  const wished = wishlist.includes(p.id);
+
+  const onWish = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!user) {
+      toast("Créez un compte pour sauvegarder vos produits favoris.");
+      return;
+    }
+    toggleWishlist(p.id).catch(() => toast.error("Erreur — réessayez"));
+  };
+
   return (
     <Link
       to={`/produit/${p.id}`}
       data-testid={`product-card-${p.id}`}
       className="group relative block overflow-hidden border border-black/10 bg-white transition-all duration-500 hover:border-black/40 hover:shadow-[0_24px_48px_rgba(0,0,0,0.07)]"
     >
+      <button
+        type="button"
+        onClick={onWish}
+        data-testid={`wishlist-heart-${p.id}`}
+        aria-label="Ajouter à la wishlist"
+        className="absolute top-3 right-3 z-10 flex items-center justify-center w-9 h-9 rounded-full bg-white/90 border border-black/10 hover:border-black/40 transition-all duration-300 cursor-pointer"
+      >
+        <Heart className={`w-4 h-4 transition-colors ${wished ? "fill-black text-black" : "text-black/50"}`} />
+      </button>
       <div
         className={`relative flex items-center justify-center overflow-hidden ${
           feature ? "aspect-[16/9]" : "aspect-[3/2]"
