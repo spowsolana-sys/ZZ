@@ -16,9 +16,13 @@ import burgundy from "../assets/sneaker-burgundy.png";
  * PRICE: intentionally left null — it renders as "PRIX BIENTÔT" everywhere
  * and is meant to be filled from Shopify. Do NOT hardcode a price.
  *
- * `scale` / `shiftY` only compensate the baked-in glow halos (white/cyan
- * photos) so all four variants render perfectly aligned at identical
- * size/position. Glow/spotlight/shadow stay neutral (no colorful gradients).
+ * `scale` / `shiftY` only compensate the baked-in glow halos / tighter crops
+ * so all four variants render perfectly aligned at identical size/position.
+ * Glow/spotlight/shadow/Z-tint stay very subtle and neutral-leaning.
+ *
+ * gallery: presentation slots (main view, profil, arrière, détails,
+ * lifestyle, portée). Only 'main' has an image today — map the remaining
+ * slots to Shopify product images when connecting the store.
  */
 export const PRODUCT = {
   handle: "tn-sneaker",
@@ -42,8 +46,17 @@ export const PRODUCT = {
       glow: "rgba(0, 0, 0, 0.30)",
       spotlight: "rgba(0, 0, 0, 0.05)",
       shadowTint: "rgba(10, 10, 10, 0.28)",
+      zTint: "rgba(0, 0, 0, 0.07)",
       scale: 1.0,
       shiftY: "0%",
+      gallery: [
+        { type: "main", label: "VUE PRINCIPALE", src: black },
+        { type: "profil", label: "PROFIL", src: null },
+        { type: "arriere", label: "ARRIÈRE", src: null },
+        { type: "details", label: "DÉTAILS", src: null },
+        { type: "lifestyle", label: "LIFESTYLE", src: null },
+        { type: "portee", label: "PORTÉE", src: null },
+      ],
     },
     {
       id: "blanche",
@@ -56,8 +69,17 @@ export const PRODUCT = {
       glow: "rgba(0, 0, 0, 0.14)",
       spotlight: "rgba(0, 0, 0, 0.04)",
       shadowTint: "rgba(10, 10, 10, 0.20)",
+      zTint: "rgba(0, 0, 0, 0.045)",
       scale: 0.955,
       shiftY: "0%",
+      gallery: [
+        { type: "main", label: "VUE PRINCIPALE", src: white },
+        { type: "profil", label: "PROFIL", src: null },
+        { type: "arriere", label: "ARRIÈRE", src: null },
+        { type: "details", label: "DÉTAILS", src: null },
+        { type: "lifestyle", label: "LIFESTYLE", src: null },
+        { type: "portee", label: "PORTÉE", src: null },
+      ],
     },
     {
       id: "cyan",
@@ -70,8 +92,17 @@ export const PRODUCT = {
       glow: "rgba(0, 0, 0, 0.24)",
       spotlight: "rgba(0, 0, 0, 0.05)",
       shadowTint: "rgba(10, 10, 10, 0.26)",
+      zTint: "rgba(0, 170, 205, 0.10)",
       scale: 0.601,
       shiftY: "2%",
+      gallery: [
+        { type: "main", label: "VUE PRINCIPALE", src: aqua },
+        { type: "profil", label: "PROFIL", src: null },
+        { type: "arriere", label: "ARRIÈRE", src: null },
+        { type: "details", label: "DÉTAILS", src: null },
+        { type: "lifestyle", label: "LIFESTYLE", src: null },
+        { type: "portee", label: "PORTÉE", src: null },
+      ],
     },
     {
       id: "rouge",
@@ -84,8 +115,17 @@ export const PRODUCT = {
       glow: "rgba(0, 0, 0, 0.28)",
       spotlight: "rgba(0, 0, 0, 0.05)",
       shadowTint: "rgba(10, 10, 10, 0.27)",
+      zTint: "rgba(150, 20, 40, 0.09)",
       scale: 0.557,
       shiftY: "6%",
+      gallery: [
+        { type: "main", label: "VUE PRINCIPALE", src: burgundy },
+        { type: "profil", label: "PROFIL", src: null },
+        { type: "arriere", label: "ARRIÈRE", src: null },
+        { type: "details", label: "DÉTAILS", src: null },
+        { type: "lifestyle", label: "LIFESTYLE", src: null },
+        { type: "portee", label: "PORTÉE", src: null },
+      ],
     },
   ],
 };

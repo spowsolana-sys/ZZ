@@ -59,6 +59,16 @@
     color: transparent;
     -webkit-text-stroke: 1px rgba(0, 0, 0, 0.06);
   }
+  .z-watermark {
+    -webkit-mask-image: url("./assets/zmask.png");
+    mask-image: url("./assets/zmask.png");
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+  }
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }

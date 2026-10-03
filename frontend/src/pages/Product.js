@@ -8,8 +8,10 @@ import {
   useTransform,
 } from "framer-motion";
 import { toast } from "sonner";
+import { Images } from "lucide-react";
 import { PRODUCTS, SIZES, priceLabel } from "@/data/products";
 import ProductStage from "@/components/ProductStage";
+import ProductGallery from "@/components/ProductGallery";
 import ColorSelectors from "@/components/ColorSelectors";
 import { useCart } from "@/context/CartContext";
 
@@ -19,6 +21,7 @@ export default function Product() {
   const { id } = useParams();
   const idx = PRODUCTS.findIndex((p) => p.id === id);
   const [size, setSize] = useState(null);
+  const [galleryOpen, setGalleryOpen] = useState(false);
   const { add } = useCart();
 
   const mx = useMotionValue(0);
@@ -68,6 +71,22 @@ export default function Product() {
         />
       </AnimatePresence>
 
+      {/* Z logo watermark behind the sneaker — tint follows the variant */}
+      <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none overflow-hidden">
+        <AnimatePresence>
+          <motion.div
+            key={p.id}
+            className="z-watermark w-[64vmin] h-[64vmin]"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.9, ease: "easeInOut" }}
+            style={{ backgroundColor: p.zTint }}
+            data-testid="z-watermark"
+          />
+        </AnimatePresence>
+      </div>
+
       {/* breadcrumb */}
       <motion.p
         initial={{ opacity: 0, y: -8 }}
@@ -104,6 +123,15 @@ export default function Product() {
           >
             {p.name}
           </h1>
+          <button
+            type="button"
+            onClick={() => setGalleryOpen(true)}
+            data-testid="gallery-open-button"
+            className="inline-flex items-center gap-2 mt-5 font-tech text-[10px] tracking-[0.3em] text-black/70 border border-black/20 rounded-full px-5 py-2.5 hover:border-black hover:text-black transition-colors duration-300 cursor-pointer"
+          >
+            <Images className="w-3.5 h-3.5" />
+            Plus de photos
+          </button>
         </motion.div>
       </div>
 
@@ -188,6 +216,13 @@ export default function Product() {
 
       {/* variant selectors */}
       <ColorSelectors products={PRODUCTS} active={idx} />
+
+      {/* gallery modal */}
+      <ProductGallery
+        open={galleryOpen}
+        onClose={() => setGalleryOpen(false)}
+        variant={p}
+      />
     </main>
   );
 }
