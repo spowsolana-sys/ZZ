@@ -1,12 +1,17 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, Heart } from "lucide-react";
+import { motion, useTransform } from "framer-motion";
 import { priceLabel, PRODUCT_COUNT } from "@/data/products";
+import { useShoeTilt, ShoeFloat, ShoeTiltLayer } from "./ShoeMotion";
 import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
 
 export default function ProductCard({ product: p, feature = false }) {
   const { user, wishlist, toggleWishlist } = useAuth();
   const wished = wishlist.includes(p.id);
+  const tilt = useShoeTilt({ maxYaw: 8, maxPitch: 6 });
+  const hoverScale = useTransform(tilt.hover, (v) => 1 + v * 0.04);
+  const hoverY = useTransform(tilt.hover, (v) => v * -8);
 
   const onWish = (e) => {
     e.preventDefault();
@@ -45,19 +50,38 @@ export default function ProductCard({ product: p, feature = false }) {
               "radial-gradient(circle, rgba(0,0,0,0.05) 0%, transparent 70%)",
           }}
         />
+        {/* présentation premium 2.5D : lévitation idle subtile + inclinaison curseur */}
         <div
           className="relative w-full h-full"
-          style={{ transform: `scale(${p.scale}) translateY(${p.shiftY})` }}
+          {...tilt.bind}
+          style={{ perspective: 900 }}
         >
-        <img
-          src={p.image}
-          alt={`ZEV SHOP — ${p.name}`}
-          draggable="false"
-          loading="lazy"
-          decoding="async"
-          className="relative w-full h-full object-contain select-none pointer-events-none transition-transform duration-700 ease-out group-hover:scale-[1.06] group-hover:-translate-y-2"
-          style={{ filter: `drop-shadow(0 24px 22px ${p.glow})` }}
-        />
+          <ShoeFloat
+            amplitude={4}
+            rotate={0.5}
+            breathe={0.006}
+            duration={6.5}
+            className="absolute inset-0"
+          >
+            <ShoeTiltLayer tilt={tilt} hoverScale={0} className="w-full h-full" >
+              <motion.div className="w-full h-full" style={{ scale: hoverScale, y: hoverY }}>
+                <div
+                  className="w-full h-full"
+                  style={{ transform: `scale(${p.scale}) translateY(${p.shiftY})` }}
+                >
+                  <img
+                    src={p.image}
+                    alt={`ZEV SHOP — ${p.name}`}
+                    draggable="false"
+                    loading="lazy"
+                    decoding="async"
+                    className="relative w-full h-full object-contain select-none pointer-events-none will-change-transform"
+                    style={{ filter: `drop-shadow(0 24px 22px ${p.glow})` }}
+                  />
+                </div>
+              </motion.div>
+            </ShoeTiltLayer>
+          </ShoeFloat>
         </div>
         <span className="absolute top-4 left-5 font-tech text-[10px] tracking-[0.35em] text-black/35">
           {p.index}&nbsp;/&nbsp;{String(PRODUCT_COUNT).padStart(2, "0")}
@@ -67,21 +91,21 @@ export default function ProductCard({ product: p, feature = false }) {
           <ArrowRight className="w-3.5 h-3.5" />
         </span>
       </div>
-      <div className="flex items-end justify-between px-5 py-5 border-t border-black/10">
-        <div className="min-w-0">
-          <h3 className="font-display text-sm sm:text-base font-bold text-black leading-snug truncate">
-            {p.productTitle}
-          </h3>
-          <p className="font-tech text-[10px] tracking-[0.25em] text-black/45 mt-1 uppercase truncate">
+      <div className="px-5 py-4 border-t border-black/10">
+        <h3 className="font-display text-sm sm:text-base font-bold text-black leading-snug truncate">
+          {p.productTitle}
+        </h3>
+        <div className="flex items-center justify-between mt-1.5">
+          <p className="font-tech text-[10px] tracking-[0.25em] text-black/45 uppercase truncate">
             {p.selectedOptions.Color}
           </p>
+          <p
+            className="font-tech text-[11px] tracking-[0.2em] text-black/55 shrink-0 pl-4"
+            data-testid={`product-card-price-${p.id}`}
+          >
+            {priceLabel(p)}
+          </p>
         </div>
-        <p
-          className="font-tech text-[11px] tracking-[0.2em] text-black/55 shrink-0 pl-4"
-          data-testid={`product-card-price-${p.id}`}
-        >
-          {priceLabel(p)}
-        </p>
       </div>
     </Link>
   );

@@ -1,4 +1,5 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useTransform } from "framer-motion";
+import { useShoeTilt, ShoeFloat, ShoeTiltLayer } from "./ShoeMotion";
 
 const EASE = [0.65, 0, 0.35, 1]; // accélération puis décélération
 const FLOAT = { duration: 7, repeat: Infinity, ease: "easeInOut" };
@@ -9,9 +10,16 @@ const FLOAT = { duration: 7, repeat: Infinity, ease: "easeInOut" };
  * while the next one descends from ABOVE into the center (scale 0.94 -> 1).
  * Both are visible mid-flight; images are never crossfaded or recolored.
  * ~800ms with a natural ease-in-out glide.
+ *
+ * Présentation premium 2.5D (ShoeMotion) : lévitation idle avec micro-rotation
+ * et respiration d'échelle, inclinaison perspective qui suit le curseur au
+ *-dessus de la scène, retour amorti par ressorts, ombre détachée réactive.
  */
 export default function ProductStage({ products, active, shoeX, shoeY }) {
   const p = products[active];
+  const tilt = useShoeTilt({ maxYaw: 10, maxPitch: 8 });
+  const shadowX = useTransform(tilt.rotateY, (v) => v * -2.4);
+  const shadowScale = useTransform(tilt.rotateY, (v) => 1 - Math.abs(v) * 0.008);
 
   return (
     <div
@@ -38,11 +46,13 @@ export default function ProductStage({ products, active, shoeX, shoeY }) {
       <motion.div
         className="relative flex flex-col items-center"
         style={{ x: shoeX, y: shoeY }}
+        {...tilt.bind}
       >
         {/* carousel viewport — overflow hidden, sneakers travel through it */}
         <motion.div
           className="relative w-[88vw] max-w-[860px] aspect-[3/2] overflow-hidden"
           data-testid="product-stage"
+          style={{ perspective: 1100 }}
         >
           <AnimatePresence>
             <motion.div
@@ -71,29 +81,31 @@ export default function ProductStage({ products, active, shoeX, shoeY }) {
               }}
               data-testid="sneaker-carousel-item"
             >
-              {/* idle levitation */}
-              <motion.div
-                className="w-full h-full"
-                animate={{ y: [-10, 10, -10] }}
-                transition={FLOAT}
-              >
-                <img
-                  src={p.image}
-                  alt={`ZEV SHOP — ${p.name}`}
-                  draggable="false"
-                  className="absolute inset-0 w-full h-full object-contain select-none pointer-events-none"
-                  style={{
-                    transform: `scale(${p.scale}) translateY(${p.shiftY})`,
-                    filter: `drop-shadow(0 32px 30px ${p.glow})`,
-                  }}
-                />
-              </motion.div>
+              {/* idle levitation premium (flottement + micro-rotation + respiration) */}
+              <ShoeFloat amplitude={9} rotate={0.8} breathe={0.012} duration={7} className="w-full h-full">
+                {/* inclinaison perspective suivant le curseur — retour amorti */}
+                <ShoeTiltLayer tilt={tilt} hoverScale={0.015} className="w-full h-full">
+                  <img
+                    src={p.image}
+                    alt={`ZEV SHOP — ${p.name}`}
+                    draggable="false"
+                    className="absolute inset-0 w-full h-full object-contain select-none pointer-events-none will-change-transform"
+                    style={{
+                      transform: `scale(${p.scale}) translateY(${p.shiftY})`,
+                      filter: `drop-shadow(0 32px 30px ${p.glow})`,
+                    }}
+                  />
+                </ShoeTiltLayer>
+              </ShoeFloat>
             </motion.div>
           </AnimatePresence>
         </motion.div>
 
-        {/* detached soft shadow — reacts to float and color transitions */}
-        <div className="relative w-[42%] h-8 sm:h-9 -mt-5 sm:-mt-6">
+        {/* detached soft shadow — reacts to float, color transitions AND tilt */}
+        <motion.div
+          className="relative w-[42%] h-8 sm:h-9 -mt-5 sm:-mt-6"
+          style={{ x: shadowX, scaleX: shadowScale }}
+        >
           <AnimatePresence>
             <motion.div
               key={p.id}
@@ -116,7 +128,7 @@ export default function ProductStage({ products, active, shoeX, shoeY }) {
             }}
             transition={FLOAT}
           />
-        </div>
+        </motion.div>
       </motion.div>
     </div>
   );
