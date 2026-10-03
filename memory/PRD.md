@@ -16,7 +16,7 @@ Simplify the existing site into a professional fashion ecommerce store called ZE
 - Nav: fixed white blur header — Z logo + ZEV SHOP | CATALOGUE, VÊTEMENTS (hover dropdown), ACCESSOIRES (hover dropdown), SUIVI DE COMMANDE | CART button with count badge. Mobile: hamburger -> full white menu panel with both category groups.
 - Home: hero (eyebrow ZEV SHOP — SNEAKERS, h1 = variant name, VOIR LE PRODUIT link, floating sneaker, giant TN watermark, price + stock, DÉFILER cue, COLORIS selectors) → marquee (TN NOIR — TN BLANCHE — TN CYAN — TN ROUGE — ZEV SHOP) → catalogue preview grid (4 cards) → footer (Z logo, links, giant ZEV SHOP watermark, © 2025 ZEV SHOP).
 - Product card (white minimal): index "0X / 04", neutral spotlight, hover lift + VOIR arrow, name + PRIX BIENTÔT.
-- Product page: breadcrumb CATALOGUE / variant, giant index watermark, ProductStage, identity block (index, variant h1, TN — ZEV SHOP), EU size chips, price + availability, AJOUTER AU PANIER (black pill, full-width on mobile), COLORIS selectors.
+- Product page (simplified 2026-10-03): breadcrumb CATALOGUE / variant, ProductStage (all animations intact), variant name only (TN NOIR / TN BLANCHE / TN CYAN / TN ROUGE), TAILLE size chips (right column on desktop, row above the button on mobile), price + availability, "Ajouter au panier" (black pill, full-width on mobile), COLORIS selectors. Giant index watermark, index/vendor lines and COLORIS label removed for simplicity. Cart correctness verified: selected variant + selected size land in the drawer (e.g. TN NOIR — EU 42, TN CYAN — EU 43).
 - Cart drawer: white, PANIER (n), empty state, items with size + price label, COMMANDER (toast: paiement à la connexion de Shopify), remove.
 
 ## Verified (2026-10-03)

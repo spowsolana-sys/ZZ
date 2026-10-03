@@ -8,7 +8,7 @@ import {
   useTransform,
 } from "framer-motion";
 import { toast } from "sonner";
-import { PRODUCT, PRODUCTS, SIZES, priceLabel } from "@/data/products";
+import { PRODUCTS, SIZES, priceLabel } from "@/data/products";
 import ProductStage from "@/components/ProductStage";
 import ColorSelectors from "@/components/ColorSelectors";
 import { useCart } from "@/context/CartContext";
@@ -27,8 +27,6 @@ export default function Product() {
   const sy = useSpring(my, { stiffness: 55, damping: 18 });
   const shoeX = useTransform(sx, (v) => v * 16);
   const shoeY = useTransform(sy, (v) => v * 10);
-  const bgX = useTransform(sx, (v) => v * -22);
-  const bgY = useTransform(sy, (v) => v * -14);
 
   if (idx < 0) return <Navigate to="/catalogue" replace />;
   const p = PRODUCTS[idx];
@@ -70,23 +68,6 @@ export default function Product() {
         />
       </AnimatePresence>
 
-      {/* giant variant index behind the shoe */}
-      <motion.div
-        aria-hidden="true"
-        className="absolute inset-0 z-0 flex items-center justify-center select-none pointer-events-none"
-        style={{ x: bgX, y: bgY }}
-      >
-        <motion.span
-          key={p.id}
-          className="font-display font-extrabold text-outline text-[60vw] lg:text-[30vw] leading-none"
-          initial={{ opacity: 0, scale: 1.05 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.6, ease: EASE }}
-        >
-          {p.index}
-        </motion.span>
-      </motion.div>
-
       {/* breadcrumb */}
       <motion.p
         initial={{ opacity: 0, y: -8 }}
@@ -117,18 +98,12 @@ export default function Product() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.9, delay: 0.25, ease: EASE }}
         >
-          <p className="font-tech text-[10px] tracking-[0.4em] text-black/40">
-            {p.index}&nbsp;/&nbsp;04
-          </p>
           <h1
-            className="font-display text-lg sm:text-2xl font-bold mt-3 text-black leading-snug"
+            className="font-display text-lg sm:text-2xl font-bold text-black leading-snug"
             data-testid="product-variant-name"
           >
             {p.name}
           </h1>
-          <p className="font-tech text-[10px] tracking-[0.3em] text-black/45 mt-3 hidden sm:block">
-            {PRODUCT.title}&nbsp;—&nbsp;{PRODUCT.vendor}
-          </p>
         </motion.div>
       </div>
 
@@ -140,7 +115,7 @@ export default function Product() {
           transition={{ duration: 0.9, delay: 0.45, ease: EASE }}
         >
           <p className="font-tech text-[10px] tracking-[0.4em] text-black/40 mb-3 sm:text-right">
-            TAILLE&nbsp;—&nbsp;EU
+            TAILLE
           </p>
           <div className="flex sm:flex-col flex-nowrap gap-1.5 sm:gap-2 sm:items-end">
             {SIZES.map((s) => (
@@ -205,9 +180,9 @@ export default function Product() {
           type="button"
           onClick={onAdd}
           data-testid="add-to-cart-button"
-          className="w-full sm:w-auto font-tech text-[11px] tracking-[0.3em] text-white bg-black rounded-full px-8 py-4 hover:bg-black/85 transition-colors duration-300 cursor-pointer"
+          className="w-full sm:w-auto font-tech text-[12px] tracking-[0.2em] text-white bg-black rounded-full px-8 py-4 hover:bg-black/85 transition-colors duration-300 cursor-pointer"
         >
-          AJOUTER&nbsp;AU&nbsp;PANIER
+          Ajouter au panier
         </button>
       </motion.div>
 

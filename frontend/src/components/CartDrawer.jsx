@@ -1,4 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { X, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { useCart } from "@/context/CartContext";

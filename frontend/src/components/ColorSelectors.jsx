@@ -2,10 +2,7 @@ import { Link } from "react-router-dom";
 
 export default function ColorSelectors({ products, active }) {
   return (
-    <div className="absolute z-30 inset-x-0 bottom-7 sm:bottom-9 flex flex-col items-center gap-3 pointer-events-none">
-      <p className="font-tech text-[10px] tracking-[0.45em] text-black/40">
-        COLORIS — 04
-      </p>
+    <div className="absolute z-30 inset-x-0 bottom-7 sm:bottom-9 flex justify-center pointer-events-none">
       <div className="flex items-center gap-4 sm:gap-5 pointer-events-auto">
         {products.map((p, i) => (
           <Link
