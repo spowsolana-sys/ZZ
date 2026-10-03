@@ -9,14 +9,14 @@ export default function SneakerStage({ products, active, shoeX, shoeY }) {
       className="absolute inset-0 z-10 flex items-center justify-center overflow-hidden"
       data-testid="product-viewport"
     >
-      {/* radial spotlight behind the shoe */}
+      {/* soft neutral spotlight behind the shoe */}
       <motion.div
         className="absolute w-[95vmin] h-[95vmin] rounded-full pointer-events-none"
         style={{
           x: shoeX,
           y: shoeY,
           background:
-            "radial-gradient(circle, rgba(0,240,255,0.16) 0%, rgba(0,240,255,0.05) 42%, transparent 70%)",
+            "radial-gradient(circle, rgba(0,0,0,0.045) 0%, rgba(0,0,0,0.015) 42%, transparent 70%)",
         }}
       />
 
@@ -38,14 +38,14 @@ export default function SneakerStage({ products, active, shoeX, shoeY }) {
                 <img
                   key={p.id}
                   src={p.image}
-                  alt={`Nike Air Max Plus TN — ${p.name}`}
+                  alt={`ZEV SHOP — ${p.name}`}
                   draggable="false"
                   className={`absolute inset-0 w-full h-full object-contain select-none pointer-events-none transition-opacity duration-500 ${
                     i === active ? "opacity-100" : "opacity-0"
                   }`}
                   style={{
                     transform: `scale(${p.scale}) translateY(${p.shiftY})`,
-                    filter: `drop-shadow(0 0 55px ${p.glow})`,
+                    filter: `drop-shadow(0 32px 30px ${p.glow})`,
                   }}
                 />
               ))}
@@ -53,10 +53,10 @@ export default function SneakerStage({ products, active, shoeX, shoeY }) {
           </motion.div>
         </motion.div>
 
-        {/* soft hovering shadow, counter-phased with the float */}
+        {/* detached soft shadow, counter-phased with the float */}
         <motion.div
-          className="-mt-4 sm:-mt-6 h-7 sm:h-9 w-[42%] rounded-[100%] bg-cyan-200/25 blur-2xl"
-          animate={{ scaleX: [1.05, 0.85, 1.05], opacity: [0.55, 0.28, 0.55] }}
+          className="-mt-4 sm:-mt-6 h-7 sm:h-9 w-[42%] rounded-[100%] bg-black/40 blur-2xl"
+          animate={{ scaleX: [1.05, 0.85, 1.05], opacity: [0.4, 0.2, 0.4] }}
           transition={FLOAT}
         />
       </motion.div>

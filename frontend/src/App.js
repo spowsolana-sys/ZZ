@@ -7,8 +7,10 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
 import Home from "@/pages/Home";
-import Shop from "@/pages/Shop";
+import Catalogue from "@/pages/Catalogue";
 import Product from "@/pages/Product";
+import Suivi from "@/pages/Suivi";
+import CategoryPage from "@/pages/Categories";
 
 class ErrorBoundary extends Component {
   constructor(props) {
@@ -21,8 +23,8 @@ class ErrorBoundary extends Component {
   render() {
     if (this.state.error)
       return (
-        <div className="min-h-screen bg-[#05070A] text-white flex items-center justify-center font-tech text-xs tracking-[0.3em]">
-          SOMETHING UNTUNED — PLEASE RELOAD
+        <div className="min-h-screen bg-white text-black flex items-center justify-center font-tech text-xs tracking-[0.3em]">
+          UNE ERREUR EST SURVENUE — RECHARGEZ LA PAGE
         </div>
       );
     return this.props.children;
@@ -63,8 +65,10 @@ function App() {
           <Nav />
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/shop" element={<Shop />} />
-            <Route path="/product/:id" element={<Product />} />
+            <Route path="/catalogue" element={<Catalogue />} />
+            <Route path="/categorie/:slug" element={<CategoryPage />} />
+            <Route path="/produit/:id" element={<Product />} />
+            <Route path="/suivi" element={<Suivi />} />
             <Route path="*" element={<Home />} />
           </Routes>
           <Footer />
@@ -73,11 +77,10 @@ function App() {
       </BrowserRouter>
       <Toaster
         position="bottom-right"
-        theme="dark"
+        theme="light"
         toastOptions={{
           style: {
-            background: "#0A0E17",
-            border: "1px solid rgba(0,240,255,0.25)",
+            background: "#0A0A0A",
             color: "#fff",
             fontFamily: "'Space Mono', monospace",
             fontSize: "11px",

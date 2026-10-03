@@ -17,7 +17,7 @@ export default function ProductStage({ products, active, shoeX, shoeY }) {
       className="absolute inset-0 z-10 flex items-center justify-center overflow-hidden"
       data-testid="product-viewport"
     >
-      {/* per-variant ambient spotlight — crossfades with the colorway */}
+      {/* neutral ambient spotlight — crossfades on switch */}
       <AnimatePresence>
         <motion.div
           key={p.id}
@@ -78,12 +78,12 @@ export default function ProductStage({ products, active, shoeX, shoeY }) {
               >
                 <img
                   src={p.image}
-                  alt={`Nike Air Max Plus TN — ${p.name}`}
+                  alt={`ZEV SHOP — ${p.name}`}
                   draggable="false"
                   className="absolute inset-0 w-full h-full object-contain select-none pointer-events-none"
                   style={{
                     transform: `scale(${p.scale}) translateY(${p.shiftY})`,
-                    filter: `drop-shadow(0 0 55px ${p.glow})`,
+                    filter: `drop-shadow(0 32px 30px ${p.glow})`,
                   }}
                 />
               </motion.div>
@@ -91,7 +91,7 @@ export default function ProductStage({ products, active, shoeX, shoeY }) {
           </AnimatePresence>
         </motion.div>
 
-        {/* detached soft shadow — crossfades tint with the colorway */}
+        {/* detached soft shadow — crossfades density with the variant */}
         <div className="relative w-[42%] h-8 sm:h-9 -mt-5 sm:-mt-6">
           <AnimatePresence>
             <motion.div
@@ -105,10 +105,10 @@ export default function ProductStage({ products, active, shoeX, shoeY }) {
             />
           </AnimatePresence>
           <motion.div
-            className="absolute inset-0 rounded-[100%] bg-black/60 blur-2xl"
+            className="absolute inset-0 rounded-[100%] bg-black/50 blur-2xl"
             animate={{
               scaleX: [1.05, 0.85, 1.05],
-              opacity: [0.5, 0.25, 0.5],
+              opacity: [0.4, 0.2, 0.4],
             }}
             transition={FLOAT}
           />

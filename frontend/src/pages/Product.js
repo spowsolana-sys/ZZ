@@ -30,7 +30,7 @@ export default function Product() {
   const bgX = useTransform(sx, (v) => v * -22);
   const bgY = useTransform(sy, (v) => v * -14);
 
-  if (idx < 0) return <Navigate to="/shop" replace />;
+  if (idx < 0) return <Navigate to="/catalogue" replace />;
   const p = PRODUCTS[idx];
 
   const onMouseMove = (e) => {
@@ -41,20 +41,20 @@ export default function Product() {
 
   const onAdd = () => {
     if (!size) {
-      toast.error("SELECT A SIZE FIRST");
+      toast.error("CHOISISSEZ D'ABORD UNE TAILLE");
       return;
     }
     add(p.id, size);
-    toast.success(`${p.name} — EU ${size} ADDED TO CART`);
+    toast.success(`${p.name} — EU ${size} AJOUTÉ AU PANIER`);
   };
 
   return (
     <main
-      className="relative min-h-[100svh] overflow-hidden"
+      className="relative min-h-[100svh] overflow-hidden bg-white"
       data-testid="product-page"
       onMouseMove={onMouseMove}
     >
-      {/* per-variant ambient background tint */}
+      {/* neutral ambient tint, crossfades with the variant */}
       <AnimatePresence>
         <motion.div
           key={p.id}
@@ -92,13 +92,13 @@ export default function Product() {
         initial={{ opacity: 0, y: -8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.2, ease: EASE }}
-        className="absolute z-30 top-24 left-6 sm:left-10 font-tech text-[10px] tracking-[0.4em] text-white/40"
+        className="absolute z-30 top-24 left-6 sm:left-10 font-tech text-[10px] tracking-[0.4em] text-black/40"
       >
-        <Link to="/shop" className="hover:text-cyan-300 transition-colors">
-          SHOP
+        <Link to="/catalogue" className="hover:text-black transition-colors">
+          CATALOGUE
         </Link>
         <span className="mx-2">/</span>
-        <span className="text-cyan-300/80">{PRODUCT.title}</span>
+        <span className="text-black/70">{p.title}</span>
       </motion.p>
 
       {/* immersive carousel stage */}
@@ -110,37 +110,37 @@ export default function Product() {
       />
 
       {/* left — variant identity */}
-      <div className="absolute z-30 left-6 sm:left-10 top-[56%] sm:top-[58%] max-w-[220px]">
+      <div className="absolute z-30 left-6 sm:left-10 top-[52%] sm:top-[58%] max-w-[220px]">
         <motion.div
           key={p.id}
           initial={{ opacity: 0, x: -18 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.9, delay: 0.25, ease: EASE }}
         >
-          <p className="font-tech text-[10px] tracking-[0.4em] text-white/40">
-            TN-98&nbsp;//&nbsp;{p.index}&nbsp;/&nbsp;04
+          <p className="font-tech text-[10px] tracking-[0.4em] text-black/40">
+            {p.index}&nbsp;/&nbsp;04
           </p>
           <h1
-            className="font-display text-lg sm:text-2xl font-bold mt-3 text-white leading-snug"
+            className="font-display text-lg sm:text-2xl font-bold mt-3 text-black leading-snug"
             data-testid="product-variant-name"
           >
             {p.name}
           </h1>
-          <p className="font-tech text-[10px] tracking-[0.3em] text-cyan-300/80 mt-3 hidden sm:block">
-            AIR&nbsp;MAX&nbsp;PLUS&nbsp;—&nbsp;VARIANT&nbsp;{p.index}
+          <p className="font-tech text-[10px] tracking-[0.3em] text-black/45 mt-3 hidden sm:block">
+            {PRODUCT.title}&nbsp;—&nbsp;{PRODUCT.vendor}
           </p>
         </motion.div>
       </div>
 
-      {/* sizes — right column on desktop, scrollable row on mobile */}
-      <div className="absolute z-30 left-6 right-6 sm:left-auto sm:right-10 bottom-44 sm:bottom-auto sm:top-[42%]">
+      {/* sizes — right column on desktop, row on mobile */}
+      <div className="absolute z-30 left-6 right-6 sm:left-auto sm:right-10 bottom-[232px] sm:bottom-auto sm:top-[42%]">
         <motion.div
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.45, ease: EASE }}
         >
-          <p className="font-tech text-[10px] tracking-[0.4em] text-white/40 mb-3 sm:text-right">
-            SELECT&nbsp;SIZE&nbsp;—&nbsp;EU
+          <p className="font-tech text-[10px] tracking-[0.4em] text-black/40 mb-3 sm:text-right">
+            TAILLE&nbsp;—&nbsp;EU
           </p>
           <div className="flex sm:flex-col flex-nowrap gap-1.5 sm:gap-2 sm:items-end">
             {SIZES.map((s) => (
@@ -151,8 +151,8 @@ export default function Product() {
                 data-testid={`size-chip-${s}`}
                 className={`shrink-0 sm:shrink w-10 h-9 sm:w-12 sm:h-10 font-tech text-[10px] sm:text-[11px] tracking-[0.1em] border transition-all duration-300 cursor-pointer ${
                   size === s
-                    ? "border-cyan-300 text-cyan-300 shadow-[0_0_16px_rgba(0,240,255,0.35)]"
-                    : "border-white/15 text-white/60 hover:border-white/40 hover:text-white"
+                    ? "border-black bg-black text-white"
+                    : "border-black/20 text-black/60 hover:border-black/60 hover:text-black"
                 }`}
               >
                 {s}
@@ -162,37 +162,34 @@ export default function Product() {
         </motion.div>
       </div>
 
-      {/* bottom-left — price + status */}
+      {/* bottom-left — price + availability */}
       <motion.div
         initial={{ opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.9, delay: 0.55, ease: EASE }}
-        className="absolute z-30 left-6 sm:left-10 bottom-24 sm:bottom-9"
+        className="absolute z-30 left-6 sm:left-10 bottom-[152px] sm:bottom-9"
       >
-        <p className="font-tech text-[10px] tracking-[0.4em] text-white/40">
-          DROP&nbsp;001
-        </p>
         <p
-          className="font-display font-bold text-lg sm:text-3xl mt-2 text-white"
+          className="font-display font-bold text-base sm:text-2xl text-black"
           data-testid="product-price"
         >
           {priceLabel(p)}
         </p>
         <p
-          className={`flex items-center gap-2 font-tech text-[10px] tracking-[0.3em] mt-2 sm:mt-3 ${
-            p.available ? "text-cyan-300/90" : "text-white/40"
+          className={`flex items-center gap-2 font-tech text-[10px] tracking-[0.3em] mt-2 ${
+            p.available ? "text-black/60" : "text-black/35"
           }`}
         >
           {p.available ? (
             <>
               <span className="relative flex w-2 h-2">
-                <span className="absolute inline-flex w-full h-full rounded-full bg-cyan-400 opacity-60 animate-ping" />
-                <span className="relative inline-flex w-2 h-2 rounded-full bg-cyan-300" />
+                <span className="absolute inline-flex w-full h-full rounded-full bg-black/30 opacity-60 animate-ping" />
+                <span className="relative inline-flex w-2 h-2 rounded-full bg-black" />
               </span>
-              IN&nbsp;STOCK
+              EN&nbsp;STOCK
             </>
           ) : (
-            <>SOLD&nbsp;OUT</>
+            <>ÉPUISÉ</>
           )}
         </p>
       </motion.div>
@@ -202,15 +199,15 @@ export default function Product() {
         initial={{ opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.9, delay: 0.65, ease: EASE }}
-        className="absolute z-30 right-6 sm:right-10 bottom-24 sm:bottom-9"
+        className="absolute z-30 left-6 right-6 sm:left-auto sm:right-10 bottom-24 sm:bottom-9"
       >
         <button
           type="button"
           onClick={onAdd}
           data-testid="add-to-cart-button"
-          className="font-tech text-[11px] tracking-[0.3em] text-[#05070A] bg-cyan-300 rounded-full px-8 py-4 hover:shadow-[0_0_36px_rgba(0,240,255,0.5)] transition-shadow duration-300 cursor-pointer"
+          className="w-full sm:w-auto font-tech text-[11px] tracking-[0.3em] text-white bg-black rounded-full px-8 py-4 hover:bg-black/85 transition-colors duration-300 cursor-pointer"
         >
-          ADD&nbsp;TO&nbsp;CART
+          AJOUTER&nbsp;AU&nbsp;PANIER
         </button>
       </motion.div>
 

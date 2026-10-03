@@ -1,21 +1,14 @@
-const ITEMS = [
-  "AIR MAX PLUS TN",
-  "TUNED AIR",
-  "1998 ARCHIVE",
-  "WAVEFORM ENGINEERED",
-  "HEMISPHERIC DAMPERS",
-  "OBSIDIAN LAB",
-];
+const ITEMS = ["TN NOIR", "TN BLANCHE", "TN CYAN", "TN ROUGE", "ZEV SHOP"];
 
 function Sequence() {
   return (
     <div className="flex items-center shrink-0">
       {ITEMS.map((item, i) => (
         <span key={i} className="flex items-center">
-          <span className="font-tech text-[10px] tracking-[0.35em] text-cyan-200/60 px-7">
+          <span className="font-tech text-[10px] tracking-[0.35em] text-black/50 px-7">
             {item}
           </span>
-          <span className="w-1.5 h-1.5 rotate-45 bg-cyan-400/50" />
+          <span className="w-1.5 h-1.5 rotate-45 bg-black/30" />
         </span>
       ))}
     </div>
@@ -25,7 +18,7 @@ function Sequence() {
 export default function Marquee() {
   return (
     <div
-      className="relative z-40 border-t border-white/10 bg-[#070A10] py-3 overflow-hidden"
+      className="relative z-40 border-y border-black/10 bg-white py-3 overflow-hidden"
       data-testid="editorial-marquee"
     >
       <div className="marquee-track flex w-max">
