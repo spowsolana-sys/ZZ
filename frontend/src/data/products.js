@@ -46,7 +46,7 @@ export const PRODUCT = {
       glow: "rgba(0, 0, 0, 0.30)",
       spotlight: "rgba(0, 0, 0, 0.05)",
       shadowTint: "rgba(10, 10, 10, 0.28)",
-      zTint: "rgba(0, 0, 0, 0.10)",
+      zTint: "rgba(0, 0, 0, 0.16)",
       scale: 1.0,
       shiftY: "0%",
       gallery: [
@@ -69,7 +69,7 @@ export const PRODUCT = {
       glow: "rgba(0, 0, 0, 0.14)",
       spotlight: "rgba(0, 0, 0, 0.04)",
       shadowTint: "rgba(10, 10, 10, 0.20)",
-      zTint: "rgba(0, 0, 0, 0.07)",
+      zTint: "rgba(0, 0, 0, 0.055)",
       scale: 0.955,
       shiftY: "0%",
       gallery: [
@@ -92,7 +92,7 @@ export const PRODUCT = {
       glow: "rgba(0, 0, 0, 0.24)",
       spotlight: "rgba(0, 0, 0, 0.05)",
       shadowTint: "rgba(10, 10, 10, 0.26)",
-      zTint: "rgba(0, 150, 190, 0.14)",
+      zTint: "rgba(0, 145, 185, 0.19)",
       scale: 0.601,
       shiftY: "2%",
       gallery: [
@@ -115,7 +115,7 @@ export const PRODUCT = {
       glow: "rgba(0, 0, 0, 0.28)",
       spotlight: "rgba(0, 0, 0, 0.05)",
       shadowTint: "rgba(10, 10, 10, 0.27)",
-      zTint: "rgba(160, 25, 45, 0.13)",
+      zTint: "rgba(165, 25, 50, 0.18)",
       scale: 0.557,
       shiftY: "6%",
       gallery: [

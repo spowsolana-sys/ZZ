@@ -1,4 +1,4 @@
-const ITEMS = ["TN NOIR", "TN BLANCHE", "TN CYAN", "TN ROUGE", "ZEV SHOP"];
+const ITEMS = ["ZEV SHOP", "MOVE DIFFERENT", "NEW ARRIVALS"];
 
 function Sequence() {
   return (
