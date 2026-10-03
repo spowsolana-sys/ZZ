@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 
-const EASE = [0.22, 1, 0.36, 1];
+const EASE = [0.65, 0, 0.35, 1]; // accélération puis décélération
 const FLOAT = { duration: 7, repeat: Infinity, ease: "easeInOut" };
 
 /*
@@ -8,6 +8,7 @@ const FLOAT = { duration: 7, repeat: Infinity, ease: "easeInOut" };
  * travels DOWN out of the viewport (slight scale-down, fades near the end)
  * while the next one descends from ABOVE into the center (scale 0.94 -> 1).
  * Both are visible mid-flight; images are never crossfaded or recolored.
+ * ~800ms with a natural ease-in-out glide.
  */
 export default function ProductStage({ products, active, shoeX, shoeY }) {
   const p = products[active];
@@ -53,19 +54,19 @@ export default function ProductStage({ products, active, shoeX, shoeY }) {
                 scale: 1,
                 opacity: 1,
                 transition: {
-                  y: { duration: 1.05, ease: EASE },
-                  scale: { duration: 1.05, ease: EASE },
-                  opacity: { duration: 0.45, ease: "easeOut" },
+                  y: { duration: 0.8, ease: EASE },
+                  scale: { duration: 0.8, ease: EASE },
+                  opacity: { duration: 0.3, ease: "easeOut" },
                 },
               }}
               exit={{
                 y: "135%",
-                scale: 0.94,
+                scale: 0.96,
                 opacity: 0,
                 transition: {
-                  y: { duration: 0.95, ease: [0.5, 0, 0.75, 0] },
-                  scale: { duration: 0.95, ease: [0.5, 0, 0.75, 0] },
-                  opacity: { duration: 0.4, delay: 0.55, ease: "easeIn" },
+                  y: { duration: 0.8, ease: EASE },
+                  scale: { duration: 0.8, ease: EASE },
+                  opacity: { duration: 0.3, delay: 0.5, ease: "easeIn" },
                 },
               }}
               data-testid="sneaker-carousel-item"
@@ -100,7 +101,7 @@ export default function ProductStage({ products, active, shoeX, shoeY }) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.5, ease: "easeInOut" }}
+              transition={{ duration: 0.8, ease: "easeInOut" }}
               style={{ background: p.shadowTint }}
             />
           </AnimatePresence>

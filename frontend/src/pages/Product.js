@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import {
   AnimatePresence,
   motion,
+  useAnimation,
   useMotionValue,
   useSpring,
   useTransform,
@@ -15,7 +16,7 @@ import ProductGallery from "@/components/ProductGallery";
 import ColorSelectors from "@/components/ColorSelectors";
 import { useCart } from "@/context/CartContext";
 
-const EASE = [0.16, 1, 0.3, 1];
+const EASE = [0.65, 0, 0.35, 1];
 
 export default function Product() {
   const { id } = useParams();
@@ -23,6 +24,16 @@ export default function Product() {
   const [size, setSize] = useState(null);
   const [galleryOpen, setGalleryOpen] = useState(false);
   const { add } = useCart();
+
+  // Le logo Z pulse très légèrement à chaque changement de coloris
+  const zControls = useAnimation();
+  useEffect(() => {
+    zControls.start({
+      scale: [1, 0.985, 1],
+      opacity: [1, 0.8, 1],
+      transition: { duration: 0.8, ease: EASE },
+    });
+  }, [idx]);
 
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
@@ -71,20 +82,20 @@ export default function Product() {
         />
       </AnimatePresence>
 
-      {/* Z logo watermark behind the sneaker — tint follows the variant */}
-      <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none overflow-hidden">
-        <AnimatePresence>
-          <motion.div
-            key={p.id}
-            className="z-watermark w-[64vmin] h-[64vmin]"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.9, ease: "easeInOut" }}
-            style={{ backgroundColor: p.zTint }}
-            data-testid="z-watermark"
-          />
-        </AnimatePresence>
+      {/* Z logo watermark — conteneur fixe parfaitement centré, indépendant
+          de la sneaker ; la couleur change progressivement */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+          <motion.div animate={zControls}>
+            <motion.div
+              className="z-watermark w-[64vmin] h-[64vmin]"
+              initial={false}
+              animate={{ backgroundColor: p.zTint }}
+              transition={{ duration: 0.8, ease: EASE }}
+              data-testid="z-watermark"
+            />
+          </motion.div>
+        </div>
       </div>
 
       {/* breadcrumb */}
