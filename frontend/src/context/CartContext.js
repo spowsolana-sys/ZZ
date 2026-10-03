@@ -17,13 +17,25 @@ export function CartProvider({ children }) {
     setOpen(true);
   };
 
+  const setQty = (key, qty) => {
+    if (qty <= 0) {
+      setItems((prev) => prev.filter((i) => i.key !== key));
+      return;
+    }
+    setItems((prev) =>
+      prev.map((i) => (i.key === key ? { ...i, qty } : i)),
+    );
+  };
+
   const remove = (key) =>
     setItems((prev) => prev.filter((i) => i.key !== key));
 
   const count = useMemo(() => items.reduce((n, i) => n + i.qty, 0), [items]);
 
   return (
-    <CartContext.Provider value={{ items, open, setOpen, add, remove, count }}>
+    <CartContext.Provider
+      value={{ items, open, setOpen, add, setQty, remove, count }}
+    >
       {children}
     </CartContext.Provider>
   );

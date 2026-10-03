@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { X, Trash2 } from "lucide-react";
+import { X, Trash2, Minus, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { useCart } from "@/context/CartContext";
 import { PRODUCTS, priceLabel } from "@/data/products";
@@ -8,7 +8,7 @@ import { PRODUCTS, priceLabel } from "@/data/products";
 const EASE = [0.16, 1, 0.3, 1];
 
 export default function CartDrawer() {
-  const { items, open, setOpen, remove, count } = useCart();
+  const { items, open, setOpen, setQty, remove, count } = useCart();
 
   const onCheckout = () => {
     toast("PAIEMENT DISPONIBLE À LA CONNEXION DE SHOPIFY");
@@ -72,34 +72,69 @@ export default function CartDrawer() {
                     <div
                       key={item.key}
                       data-testid="cart-item"
-                      className="flex items-center gap-4 py-4 border-b border-black/10"
+                      className="flex gap-4 py-4 border-b border-black/10"
                     >
                       <img
                         src={p.image}
                         alt={p.name}
-                        className="w-20 h-14 object-contain"
+                        className="w-20 h-14 object-contain shrink-0"
                         style={{ transform: `scale(${p.scale})` }}
                       />
-                      <div className="flex-1">
-                        <p className="font-display text-xs font-bold text-black">
-                          {p.name}
-                        </p>
-                        <p className="font-tech text-[10px] tracking-[0.2em] text-black/45 mt-1">
-                          EU&nbsp;{item.size}
-                        </p>
-                        <p className="font-tech text-[10px] tracking-[0.2em] text-black/70 mt-1">
-                          {priceLabel(p)}
-                        </p>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <p className="font-display text-xs font-bold text-black">
+                              {p.name}
+                            </p>
+                            <p
+                              className="font-tech text-[10px] tracking-[0.2em] text-black/45 mt-1"
+                              data-testid="cart-item-color"
+                            >
+                              COLORIS&nbsp;:&nbsp;
+                              {p.selectedOptions.Color}&nbsp;—&nbsp;EU&nbsp;
+                              {item.size}
+                            </p>
+                            <p className="font-tech text-[10px] tracking-[0.2em] text-black/70 mt-1">
+                              {priceLabel(p)}
+                            </p>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => remove(item.key)}
+                            data-testid="cart-item-remove"
+                            aria-label="Retirer l'article"
+                            className="text-black/40 hover:text-black transition-colors cursor-pointer shrink-0"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                        <div
+                          className="inline-flex items-center border border-black/15 rounded-full mt-3"
+                          data-testid="cart-item-qty"
+                        >
+                          <button
+                            type="button"
+                            onClick={() => setQty(item.key, item.qty - 1)}
+                            data-testid="cart-qty-minus"
+                            aria-label="Diminuer la quantité"
+                            className="flex items-center justify-center w-8 h-8 text-black/60 hover:text-black transition-colors cursor-pointer"
+                          >
+                            <Minus className="w-3.5 h-3.5" />
+                          </button>
+                          <span className="w-8 text-center font-tech text-[11px] text-black">
+                            {item.qty}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => setQty(item.key, item.qty + 1)}
+                            data-testid="cart-qty-plus"
+                            aria-label="Augmenter la quantité"
+                            className="flex items-center justify-center w-8 h-8 text-black/60 hover:text-black transition-colors cursor-pointer"
+                          >
+                            <Plus className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
                       </div>
-                      <button
-                        type="button"
-                        onClick={() => remove(item.key)}
-                        data-testid="cart-item-remove"
-                        aria-label="Retirer l'article"
-                        className="text-black/40 hover:text-black transition-colors cursor-pointer"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
                     </div>
                   );
                 })
