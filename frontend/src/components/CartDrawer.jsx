@@ -78,6 +78,7 @@ export default function CartDrawer() {
                         src={p.image}
                         alt={p.name}
                         className="w-20 h-14 object-contain"
+                        style={{ transform: `scale(${p.scale})` }}
                       />
                       <div className="flex-1">
                         <p className="font-display text-xs font-bold text-black">

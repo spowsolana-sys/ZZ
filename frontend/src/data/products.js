@@ -70,8 +70,8 @@ export const PRODUCT = {
       glow: "rgba(0, 0, 0, 0.24)",
       spotlight: "rgba(0, 0, 0, 0.05)",
       shadowTint: "rgba(10, 10, 10, 0.26)",
-      scale: 0.965,
-      shiftY: "0%",
+      scale: 0.601,
+      shiftY: "2%",
     },
     {
       id: "rouge",
@@ -84,8 +84,8 @@ export const PRODUCT = {
       glow: "rgba(0, 0, 0, 0.28)",
       spotlight: "rgba(0, 0, 0, 0.05)",
       shadowTint: "rgba(10, 10, 10, 0.27)",
-      scale: 1.0,
-      shiftY: "0%",
+      scale: 0.557,
+      shiftY: "6%",
     },
   ],
 };

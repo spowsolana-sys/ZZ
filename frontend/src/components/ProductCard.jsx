@@ -11,7 +11,7 @@ export default function ProductCard({ product: p, feature = false }) {
     >
       <div
         className={`relative flex items-center justify-center overflow-hidden ${
-          feature ? "aspect-[16/9]" : "aspect-[4/3]"
+          feature ? "aspect-[16/9]" : "aspect-[3/2]"
         }`}
       >
         <div
@@ -21,13 +21,18 @@ export default function ProductCard({ product: p, feature = false }) {
               "radial-gradient(circle, rgba(0,0,0,0.05) 0%, transparent 70%)",
           }}
         />
-        <img
-          src={p.image}
-          alt={`ZEV SHOP — ${p.name}`}
-          draggable="false"
-          className="relative w-[78%] select-none pointer-events-none transition-transform duration-700 ease-out group-hover:scale-[1.06] group-hover:-translate-y-2"
-          style={{ filter: `drop-shadow(0 28px 26px ${p.glow})` }}
-        />
+        <div
+          className="relative w-full h-full"
+          style={{ transform: `scale(${p.scale}) translateY(${p.shiftY})` }}
+        >
+          <img
+            src={p.image}
+            alt={`ZEV SHOP — ${p.name}`}
+            draggable="false"
+            className="relative w-full h-full object-contain select-none pointer-events-none transition-transform duration-700 ease-out group-hover:scale-[1.06] group-hover:-translate-y-2"
+            style={{ filter: `drop-shadow(0 24px 22px ${p.glow})` }}
+          />
+        </div>
         <span className="absolute top-4 left-5 font-tech text-[10px] tracking-[0.35em] text-black/35">
           {p.index}&nbsp;/&nbsp;04
         </span>
