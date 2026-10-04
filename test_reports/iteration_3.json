@@ -1,0 +1,64 @@
+{
+  "summary": "Validated two user-requested changes end-to-end on live preview URL: (1) 'Acheter maintenant' button fully removed on product pages (desktop + mobile) with Add-to-Cart working and 7 size chips visible; (2) New hero editorial photo properly displayed on homepage with independent desktop/mobile framings, character fully visible on mobile, no deformation, no filter/gradient. No console errors (only expected 401s from /auth/me when logged out), no horizontal overflow on /, /produit/asics-01, /produit/noir at 1440/768/390 viewports. Catalogue intact (14 cards). Cart add flow works from both desktop and mobile product panels.",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_results": {
+    "product_desktop_asics-01": {
+      "buy_now_absent": true,
+      "add_to_cart_present_visible": true,
+      "sizes_40_to_46_visible": true,
+      "overflow_x": false,
+      "add_to_cart_click_ok": true
+    },
+    "product_desktop_noir": {
+      "buy_now_absent": true,
+      "add_to_cart_visible": true,
+      "sizes_visible": true
+    },
+    "product_mobile_390": {
+      "buy_now_mobile_absent": true,
+      "mobile_buy_panel_present": true,
+      "add_to_cart_mobile_visible": true,
+      "sizes_mobile_7_visible": true,
+      "overflow_x": false,
+      "add_to_cart_mobile_click_ok": true
+    },
+    "home_desktop_1440": {
+      "hero_editorial_present": true,
+      "hero_size_px": "628x774",
+      "hero_image_natural": "736x1104",
+      "hero_title_text": "NEW ARRIVALS",
+      "discover_link_present": true,
+      "overflow_x": false
+    },
+    "home_mobile_390": {
+      "hero_size_px": "294x472 (~86% of viewport, ~56svh)",
+      "character_fully_visible_centered": true,
+      "cropping_differs_from_desktop": true,
+      "overflow_x": false
+    },
+    "tablet_768": {
+      "hero_present": true,
+      "hero_size_px": "591x573",
+      "overflow_x": false
+    },
+    "catalogue": { "card_count": 14 }
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "Product.js still imports and wires useMotionValue/useSpring/useTransform (mx, my, sx, sy, shoeX, shoeY) and attaches onMouseMove to <main>, but after buy-now removal these motion values are no longer consumed by any sibling component on this page. Harmless but dead code — could be cleaned up.",
+    "Pre-existing eslint warning on zControls dependency (acknowledged in request). Non-blocking."
+  ],
+  "updated_files": [],
+  "success_rate": { "backend": "n/a (not tested — scope was focused UI changes)", "frontend": "100%" },
+  "test_credentials": "test@zevshop.com / Test1234!, admin@zevshop.com / ZevAdmin2025! — not exercised (changes don't impact auth)",
+  "seed_data_creation": "",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Both explicit user requests are fully implemented and verified live. Buy-now buttons fully absent (desktop + mobile), hero editorial photo renders correctly with independent cropping (object-[68%_30%] mobile, object-[70%_36%] desktop), character fully visible on mobile 390 (294x472 frame). ShoeMotion/ProductStage preserved on product pages. Minor dead-code opportunity in Product.js (unused mouse parallax values after buy-now removal)."
+}
