@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
 import {
   AnimatePresence,
   motion,
@@ -9,7 +9,7 @@ import {
   useTransform,
 } from "framer-motion";
 import { toast } from "sonner";
-import { Images, Heart, Share2, X, Zap } from "lucide-react";
+import { Images, Heart, Share2, X } from "lucide-react";
 import { PRODUCTS, SIZES, priceLabel } from "@/data/products";
 import ProductStage from "@/components/ProductStage";
 import ProductGallery from "@/components/ProductGallery";
@@ -73,7 +73,6 @@ function SizeGuide({ open, onClose }) {
 
 export default function Product() {
   const { id } = useParams();
-  const navigate = useNavigate();
   const idx = PRODUCTS.findIndex((p) => p.id === id);
   const [size, setSize] = useState(null);
   const [galleryOpen, setGalleryOpen] = useState(false);
@@ -122,12 +121,6 @@ export default function Product() {
     if (!requireSize()) return;
     add(p.id, size);
     toast.success(`${p.name} — EU ${size} ajouté au panier`);
-  };
-
-  const onBuyNow = () => {
-    if (!requireSize()) return;
-    add(p.id, size);
-    navigate("/checkout");
   };
 
   const onWish = () => {
@@ -343,15 +336,6 @@ export default function Product() {
           >
             Ajouter au panier
           </button>
-          <button
-            type="button"
-            onClick={onBuyNow}
-            data-testid="buy-now-button"
-            className="flex-1 inline-flex items-center justify-center gap-2 font-tech text-[12px] tracking-[0.2em] text-black border border-black/30 rounded-full px-8 py-3.5 hover:bg-black hover:text-white transition-colors duration-300 cursor-pointer"
-          >
-            <Zap className="w-4 h-4" />
-            Acheter maintenant
-          </button>
         </motion.div>
 
         {/* sélecteurs de coloris — variantes du même produit uniquement (desktop) */}
@@ -452,15 +436,6 @@ export default function Product() {
               Ajouter au panier
             </button>
           </div>
-          <button
-            type="button"
-            onClick={onBuyNow}
-            data-testid="buy-now-button-mobile"
-            className="inline-flex items-center justify-center gap-2 font-tech text-[12px] tracking-[0.2em] text-black border border-black/30 rounded-full px-6 py-3 hover:bg-black hover:text-white transition-colors duration-300 cursor-pointer"
-          >
-            <Zap className="w-4 h-4" />
-            Acheter maintenant
-          </button>
         </div>
       </div>
 

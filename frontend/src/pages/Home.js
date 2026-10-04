@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import { ArrowRight, Star, Truck, ShieldCheck, CreditCard, Gift } from "lucide-react";
 import { api } from "@/api";
 import LogoMark from "@/components/LogoMark";
-import SneakerStage from "@/components/SneakerStage";
+import heroEditorial from "@/assets/hero-editorial.jpg";
 import ProductCard from "@/components/ProductCard";
 import Marquee from "@/components/Marquee";
 import { PRODUCTS } from "@/data/products";
@@ -67,62 +67,61 @@ function Intro() {
   );
 }
 
-/* 2 — Hero de marque */
+/* 2 — Hero de marque — image éditoriale principale (cadrages desktop/mobile indépendants) */
 function Hero() {
-  const mx = useMotionValue(0);
-  const my = useMotionValue(0);
-  const sx = useSpring(mx, { stiffness: 55, damping: 18 });
-  const sy = useSpring(my, { stiffness: 55, damping: 18 });
-  const shoeX = useTransform(sx, (v) => v * 16);
-  const shoeY = useTransform(sy, (v) => v * 10);
-
-  const onMouseMove = (e) => {
-    const r = e.currentTarget.getBoundingClientRect();
-    mx.set(((e.clientX - r.left) / r.width - 0.5) * 2);
-    my.set(((e.clientY - r.top) / r.height - 0.5) * 2);
-  };
-
   return (
     <section
       id="zev-hero"
-      className="relative min-h-[100svh] overflow-hidden bg-white flex items-center justify-center"
+      className="relative min-h-[100svh] overflow-hidden bg-white"
       data-testid="zev-hero"
-      onMouseMove={onMouseMove}
     >
-      <div className="absolute top-[15vh] inset-x-0 z-30 text-center px-6">
-        <span className="block overflow-hidden">
-          <motion.span
-            className="block font-display font-extrabold uppercase text-3xl sm:text-5xl lg:text-6xl tracking-tight text-black leading-none"
-            initial={{ y: "110%" }}
-            animate={{ y: "0%" }}
-            transition={{ duration: 1, delay: 0.15, ease: EASE }}
-            data-testid="hero-title"
+      <div className="relative min-h-[100svh] max-w-[1400px] mx-auto px-6 sm:px-10 grid lg:grid-cols-2 gap-10 lg:gap-16 items-center pt-36 pb-14 lg:pt-24 lg:pb-0">
+        {/* texte — éléments conservés à l'identique */}
+        <div className="text-center lg:text-left">
+          <span className="block overflow-hidden">
+            <motion.span
+              className="block font-display font-extrabold uppercase text-3xl sm:text-5xl lg:text-6xl tracking-tight text-black leading-none"
+              initial={{ y: "110%" }}
+              animate={{ y: "0%" }}
+              transition={{ duration: 1, delay: 0.15, ease: EASE }}
+              data-testid="hero-title"
+            >
+              NEW&nbsp;ARRIVALS
+            </motion.span>
+          </span>
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, delay: 0.45, ease: EASE }}
           >
-            NEW&nbsp;ARRIVALS
-          </motion.span>
-        </span>
+            <Link
+              to="/catalogue"
+              data-testid="hero-discover-button"
+              className="inline-flex items-center gap-2 mt-6 font-tech text-[11px] tracking-[0.35em] text-black border-b border-black pb-1 hover:opacity-60 transition-opacity duration-300"
+            >
+              DÉCOUVRIR&nbsp;LA&nbsp;COLLECTION
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </motion.div>
+        </div>
+
+        {/* image éditoriale — mobile : cadre vertical resserré, personnage entier ;
+            desktop : grande composition latérale, personnage prioritaire */}
         <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.45, ease: EASE }}
+          initial={{ opacity: 0, scale: 1.04 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.2, delay: 0.3, ease: EASE }}
+          className="relative h-[56svh] w-[86%] mx-auto lg:mx-0 lg:w-full lg:h-[86svh] overflow-hidden border border-black/10"
+          data-testid="hero-editorial"
         >
-          <Link
-            to="/catalogue"
-            data-testid="hero-discover-button"
-            className="inline-flex items-center gap-2 mt-6 font-tech text-[11px] tracking-[0.35em] text-black border-b border-black pb-1 hover:opacity-60 transition-opacity duration-300"
-          >
-            DÉCOUVRIR&nbsp;LA&nbsp;COLLECTION
-            <ArrowRight className="w-4 h-4" />
-          </Link>
+          <img
+            src={heroEditorial}
+            alt="ZEV SHOP — campagne éditoriale"
+            draggable="false"
+            className="absolute inset-0 w-full h-full object-cover object-[68%_30%] lg:object-[70%_36%]"
+          />
         </motion.div>
       </div>
-
-      <SneakerStage
-        products={PRODUCTS.filter((v) => v.productHandle === "tn-sneaker")}
-        active={0}
-        shoeX={shoeX}
-        shoeY={shoeY}
-      />
     </section>
   );
 }
@@ -339,8 +338,8 @@ function UGC() {
             data-testid={`ugc-slot-${i}`}
           >
             <div className="z-watermark w-14 h-14 bg-black/[0.07]" />
-            <p className="font-tech text-[9px] tracking-[0.25em] text-black/40 px-4">
-              AJOUTER&nbsp;LE&nbsp;LIEN&nbsp;{label.toUpperCase()}
+            <p className="font-tech text-[9px] tracking-[0.25em] text-black/40 px-4 text-center">
+              AJOUTER LE LIEN {label.toUpperCase()}
             </p>
           </a>
         ))}

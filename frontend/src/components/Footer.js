@@ -111,7 +111,7 @@ export default function Footer() {
           <p className="font-tech text-[9px] tracking-[0.3em] text-black/35">
             © 2025 ZEV SHOP — TOUS DROITS RÉSERVÉS
           </p>
-          <div className="flex items-center gap-5 font-tech text-[9px] tracking-[0.3em] text-black/35">
+          <div className="flex flex-wrap items-center justify-center lg:justify-start gap-x-5 gap-y-1 font-tech text-[9px] tracking-[0.3em] text-black/35">
             <span>FRANÇAIS</span>
             <span>EUR</span>
             <span data-testid="legal-placeholder">
