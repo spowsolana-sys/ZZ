@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { ShoppingBag, Menu, X, ChevronDown, Search, User, Globe } from "lucide-react";
 import LogoMark from "@/components/LogoMark";
@@ -29,12 +29,14 @@ export const ACCESSOIRES = [
   { slug: "bracelets", label: "Bracelets" },
 ];
 
-function Dropdown({ label, items }) {
+function Dropdown({ label, items, light = false }) {
   return (
     <div className="relative group">
       <button
         type="button"
-        className="nav-underline flex items-center gap-1.5 font-tech text-[11px] tracking-[0.25em] text-black/60 group-hover:text-black transition-colors duration-200 py-2 cursor-pointer"
+        className={`nav-underline flex items-center gap-1.5 font-tech text-[11px] tracking-[0.25em] transition-colors duration-200 py-2 cursor-pointer ${
+          light ? "text-white/75 group-hover:text-white" : "text-black/60 group-hover:text-black"
+        }`}
       >
         {label}
         <ChevronDown className="w-3.5 h-3.5 transition-transform duration-200 group-hover:rotate-180" />
@@ -57,7 +59,7 @@ function Dropdown({ label, items }) {
   );
 }
 
-function MiniSelect({ icon: Icon, value, options, testid }) {
+function MiniSelect({ icon: Icon, value, options, testid, light = false }) {
   const [open, setOpen] = useState(false);
   return (
     <div className="relative">
@@ -66,7 +68,9 @@ function MiniSelect({ icon: Icon, value, options, testid }) {
         onClick={() => setOpen((o) => !o)}
         data-testid={testid}
         aria-label={`${testid} — ${value}`}
-        className="flex items-center gap-1 font-tech text-[11px] tracking-[0.15em] text-black/60 hover:text-black transition-colors cursor-pointer"
+        className={`flex items-center gap-1 font-tech text-[11px] tracking-[0.15em] transition-colors cursor-pointer ${
+          light ? "text-white/75 hover:text-white" : "text-black/60 hover:text-black"
+        }`}
       >
         {Icon && <Icon className="w-4 h-4" />}
         <span>{value}</span>
@@ -183,9 +187,22 @@ function SearchOverlay({ open, onClose }) {
 export default function Header() {
   const { count, setOpen } = useCart();
   const { user } = useAuth();
+  const { pathname } = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [bump, setBump] = useState(false);
+  const [atTop, setAtTop] = useState(true);
+
+  // Mode immersif : transparent uniquement en haut de la page d'accueil
+  // (campagne plein écran) ; blanc/opaque au scroll et sur les autres pages.
+  const immersive = pathname === "/" && atTop && !menuOpen;
+
+  useEffect(() => {
+    const onScroll = () => setAtTop(window.scrollY < 30);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   // petite animation du compteur panier à l'ajout
   useEffect(() => {
@@ -204,20 +221,33 @@ export default function Header() {
         </p>
       </div>
 
-      <header className="fixed top-8 inset-x-0 z-50 h-20 flex items-center justify-between px-6 sm:px-10 bg-white/85 backdrop-blur-xl border-b border-black/5">
+      <header
+        className={`fixed top-8 inset-x-0 z-50 h-20 flex items-center justify-between px-6 sm:px-10 border-b transition-colors duration-500 ${
+          immersive
+            ? "bg-transparent backdrop-blur-none border-transparent"
+            : "bg-white/85 backdrop-blur-xl border-black/5"
+        }`}
+        data-testid="site-header"
+      >
         <div className="flex items-center gap-4">
           <button
             type="button"
             onClick={() => setMenuOpen(true)}
             data-testid="mobile-menu-open"
             aria-label="Ouvrir le menu"
-            className="md:hidden flex items-center justify-center w-10 h-10 rounded-full border border-black/15 text-black/80 cursor-pointer"
+            className={`md:hidden flex items-center justify-center w-10 h-10 rounded-full border transition-colors duration-500 cursor-pointer ${
+              immersive ? "border-white/30 text-white" : "border-black/15 text-black/80"
+            }`}
           >
             <Menu className="w-5 h-5" />
           </button>
           <Link to="/" data-testid="brand-logo" className="flex items-center gap-3">
-            <LogoMark className="w-9 h-9" />
-            <span className="font-display text-sm font-extrabold tracking-[0.25em] text-black">
+            <LogoMark className="w-9 h-9" variant={immersive ? "light" : "dark"} />
+            <span
+              className={`font-display text-sm font-extrabold tracking-[0.25em] transition-colors duration-500 ${
+                immersive ? "text-white" : "text-black"
+              }`}
+            >
               ZEV&nbsp;SHOP
             </span>
           </Link>
@@ -229,14 +259,20 @@ export default function Header() {
             data-testid="nav-link-catalogue"
             className={({ isActive }) =>
               `nav-underline font-tech text-[11px] tracking-[0.25em] py-2 transition-colors duration-200 ${
-                isActive ? "text-black nav-underline-active" : "text-black/60 hover:text-black"
+                isActive
+                  ? immersive
+                    ? "text-white nav-underline-active"
+                    : "text-black nav-underline-active"
+                  : immersive
+                    ? "text-white/75 hover:text-white"
+                    : "text-black/60 hover:text-black"
               }`
             }
           >
             CATALOGUE
           </NavLink>
-          <Dropdown label="VÊTEMENTS" items={VETEMENTS} />
-          <Dropdown label="ACCESSOIRES" items={ACCESSOIRES} />
+          <Dropdown label="VÊTEMENTS" items={VETEMENTS} light={immersive} />
+          <Dropdown label="ACCESSOIRES" items={ACCESSOIRES} light={immersive} />
         </nav>
 
         <div className="flex items-center gap-3 sm:gap-5">
@@ -245,7 +281,9 @@ export default function Header() {
             onClick={() => setSearchOpen(true)}
             data-testid="search-open-button"
             aria-label="Rechercher"
-            className="flex items-center justify-center w-10 h-10 rounded-full text-black/70 hover:text-black transition-colors cursor-pointer"
+            className={`flex items-center justify-center w-10 h-10 rounded-full transition-colors duration-500 cursor-pointer ${
+              immersive ? "text-white/75 hover:text-white" : "text-black/70 hover:text-black"
+            }`}
           >
             <Search className="w-[18px] h-[18px]" />
           </button>
@@ -253,7 +291,9 @@ export default function Header() {
             to="/compte"
             data-testid="account-link"
             aria-label="Compte client"
-            className="hidden sm:flex items-center gap-2 font-tech text-[11px] tracking-[0.2em] text-black/70 hover:text-black transition-colors"
+            className={`hidden sm:flex items-center gap-2 font-tech text-[11px] tracking-[0.2em] transition-colors duration-500 ${
+              immersive ? "text-white/75 hover:text-white" : "text-black/70 hover:text-black"
+            }`}
           >
             <User className="w-[18px] h-[18px]" />
             <span className="hidden lg:inline">
@@ -265,6 +305,7 @@ export default function Header() {
               icon={Globe}
               value="FR"
               testid="lang-select"
+              light={immersive}
               options={[
                 { label: "Français", active: true },
                 { label: "English", active: false },
@@ -275,6 +316,7 @@ export default function Header() {
               icon={null}
               value="EUR"
               testid="currency-select"
+              light={immersive}
               options={[
                 { label: "EUR €", active: true },
                 { label: "USD $", active: false },
@@ -287,7 +329,9 @@ export default function Header() {
             onClick={() => setOpen(true)}
             data-testid="cart-open-button"
             aria-label="Ouvrir le panier"
-            className="relative flex items-center gap-2 h-11 px-4 rounded-full border border-black/15 text-black/80 hover:border-black/40 transition-colors duration-300 cursor-pointer font-tech text-[11px] tracking-[0.2em]"
+            className={`relative flex items-center gap-2 h-11 px-4 rounded-full border transition-colors duration-500 cursor-pointer font-tech text-[11px] tracking-[0.2em] ${
+              immersive ? "border-white/30 text-white hover:border-white" : "border-black/15 text-black/80 hover:border-black/40"
+            }`}
           >
             <ShoppingBag className="w-[16px] h-[16px]" />
             <span className="hidden sm:inline">CART</span>

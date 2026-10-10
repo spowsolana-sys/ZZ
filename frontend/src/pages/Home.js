@@ -5,14 +5,17 @@ import { ArrowRight, Star, Truck, ShieldCheck, CreditCard, Gift } from "lucide-r
 import { api } from "@/api";
 import LogoMark from "@/components/LogoMark";
 import heroEditorial from "@/assets/hero-editorial.jpg";
+import introCampaign from "@/assets/intro-campaign.jpg";
+import introExtLeft from "@/assets/intro-ext-left.jpg";
+import introExtRight from "@/assets/intro-ext-right.jpg";
+import zlogoWhite from "@/assets/zlogo-white.png";
 import ProductCard from "@/components/ProductCard";
 import Marquee from "@/components/Marquee";
 import { PRODUCTS } from "@/data/products";
-import zlogo from "@/assets/zlogo.png";
 
 const EASE = [0.16, 1, 0.3, 1];
 
-/* 1 — Écran d'introduction */
+/* 1 — Écran d'introduction : campagne plein écran (100vw × 100svh, aucun bord vide) */
 function Intro() {
   const onDiscover = () => {
     const el = document.getElementById("zev-hero");
@@ -23,46 +26,63 @@ function Intro() {
 
   return (
     <section
-      className="relative min-h-[92svh] flex flex-col items-center justify-center bg-white overflow-hidden px-6 text-center"
+      className="relative h-[100svh] w-full overflow-hidden bg-[#220407]"
       data-testid="intro-section"
     >
-      <motion.img
-        src={zlogo}
-        alt="ZEV SHOP"
+      {/* extensions latérales — fond de la photo prolongé (miroir fondu), invisibles
+          à la jonction ; largeur variable continue, disparaissent sur les formats verticaux */}
+      <div
+        className="absolute left-0 top-0 h-full w-[max(0px,calc((100%-56.25svh)/2))] overflow-hidden"
+        aria-hidden="true"
+        data-testid="intro-ext-left"
+      >
+        <img
+          src={introExtLeft}
+          alt=""
+          draggable="false"
+          className="absolute right-0 top-0 h-full w-auto max-w-none select-none pointer-events-none"
+        />
+      </div>
+      <div
+        className="absolute right-0 top-0 h-full w-[max(0px,calc((100%-56.25svh)/2))] overflow-hidden"
+        aria-hidden="true"
+        data-testid="intro-ext-right"
+      >
+        <img
+          src={introExtRight}
+          alt=""
+          draggable="false"
+          className="absolute left-0 top-0 h-full w-auto max-w-none select-none pointer-events-none"
+        />
+      </div>
+
+      {/* photo plein cadre — hauteur 100%, cadrage focus personnage (recadrage
+          latéral automatique sur les formats verticaux). La marque est assurée
+          par le header transparent au-dessus de l'image — aucun texte ajouté. */}
+      <img
+        src={introCampaign}
+        alt="ZEV SHOP — campagne éditoriale"
         draggable="false"
-        initial={{ opacity: 0, scale: 0.92, y: 16 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ duration: 1.1, ease: EASE }}
-        className="w-[38vmin] max-w-[300px] select-none"
-        data-testid="intro-logo"
+        className="absolute left-1/2 top-0 h-full w-auto max-w-none -translate-x-1/2 select-none"
+        data-testid="intro-campaign"
       />
-      <motion.p
-        initial={{ opacity: 0, y: 14 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.9, delay: 0.25, ease: EASE }}
-        className="font-display font-extrabold tracking-[0.35em] text-xl sm:text-2xl mt-8 text-black"
+
+      {/* CTA découverte — bas d'écran, zone noire de la photo */}
+      <motion.div
+        className="absolute bottom-8 sm:bottom-10 inset-x-0 z-10 flex justify-center"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.9, delay: 0.5, ease: EASE }}
       >
-        ZEV&nbsp;SHOP
-      </motion.p>
-      <motion.p
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.9, delay: 0.45, ease: EASE }}
-        className="font-tech text-[10px] sm:text-[11px] tracking-[0.55em] text-black/45 mt-4"
-      >
-        MOVE&nbsp;DIFFERENT.
-      </motion.p>
-      <motion.button
-        type="button"
-        onClick={onDiscover}
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.9, delay: 0.65, ease: EASE }}
-        data-testid="intro-discover-button"
-        className="mt-12 font-tech text-[11px] tracking-[0.35em] text-black border border-black/25 rounded-full px-10 py-3.5 hover:bg-black hover:text-white transition-colors duration-300 cursor-pointer"
-      >
-        DÉCOUVRIR
-      </motion.button>
+        <button
+          type="button"
+          onClick={onDiscover}
+          data-testid="intro-discover-button"
+          className="font-tech text-[11px] tracking-[0.35em] text-white border border-white/40 rounded-full px-10 py-3.5 hover:bg-white hover:text-black transition-colors duration-300 cursor-pointer"
+        >
+          DÉCOUVRIR
+        </button>
+      </motion.div>
     </section>
   );
 }
